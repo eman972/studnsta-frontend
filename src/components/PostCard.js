@@ -1,10 +1,23 @@
 import { useState } from "react";
-import { likePost, commentOnPost } from "../services/postService";
+import { likePost, commentOnPost, savePost } from "../services/postService";
 
 function PostCard({ post, onInteraction, onOpenComments, isActive }) {
   const [isLiking, setIsLiking] = useState(false);
   const [isCommenting, setIsCommenting] = useState(false);
   const [commentText, setCommentText] = useState("");
+  const [isSaving, setIsSaving] = useState(false);
+
+  const handleSave = async () => {
+    setIsSaving(true);
+    try {
+      await savePost(post._id);
+      onInteraction();
+    } catch (error) {
+      alert("Failed to save post: " + (error.response?.status || error.message));
+    } finally {
+      setIsSaving(false);
+    }
+  };
 
   const handleLike = async () => {
     setIsLiking(true);
@@ -39,6 +52,7 @@ function PostCard({ post, onInteraction, onOpenComments, isActive }) {
 
 
   const isLiked = post.likes.some(like => (like._id || like) === localStorage.getItem("userId"));
+  const isSaved = post.saves && post.saves.some(save => (save._id || save) === localStorage.getItem("userId"));
 
   return (
     <div className="glass-card" style={{
@@ -190,8 +204,31 @@ function PostCard({ post, onInteraction, onOpenComments, isActive }) {
             <span style={{ fontSize: '1.4rem' }}>💬</span> 
             <span style={{ fontWeight: '600', fontSize: '0.95rem' }}>{post.comments.length}</span>
           </button>
-
-
+          
+          <button
+            onClick={handleSave}
+            disabled={isSaving}
+            style={{
+              background: 'none',
+              border: 'none',
+              fontSize: '1.25rem',
+              cursor: isSaving ? 'not-allowed' : 'pointer',
+              color: isSaved ? '#F59E0B' : 'var(--text-muted)',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.6rem',
+              padding: '0.5rem 0.75rem',
+              borderRadius: '12px',
+              transition: 'all 0.2s',
+              fontWeight: '700',
+              marginLeft: 'auto'
+            }}
+            onMouseOver={(e) => e.currentTarget.style.backgroundColor = 'var(--accent-soft)'}
+            onMouseOut={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+          >
+            <span style={{ fontSize: '1.6rem' }}>{isSaved ? '📌' : '📍'}</span> 
+            <span style={{ fontSize: '1rem' }}>{post.saves ? post.saves.length : 0}</span>
+          </button>
         </div>
 
         {/* Comment Entry Area (Quick Ref) */}

@@ -338,6 +338,108 @@ function ProgressDashboard() {
           )}
         </div>
       )}
+
+      {/* Quiz History List */}
+      <div className="glass-card" style={{ 
+        marginTop: '2rem',
+        padding: '2rem',
+        background: 'rgba(250, 250, 255, 0.02)',
+        border: '1px solid var(--glass-border)',
+        backdropFilter: 'blur(30px)',
+        boxShadow: '0 25px 50px rgba(0, 0, 0, 0.3)'
+      }}>
+        <h3 style={{ 
+          color: 'var(--pure-pearl)',
+          fontSize: '1.5rem',
+          fontWeight: '700',
+          marginBottom: '1.5rem',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '0.5rem'
+        }}>
+          <span>📜</span> Quiz History
+        </h3>
+        
+        {filteredResults.length === 0 ? (
+          <div style={{ textAlign: 'center', padding: '2rem', color: 'var(--text-muted)' }}>
+            No quizzes found for the selected time range.
+          </div>
+        ) : (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+            {filteredResults.map((result) => {
+              const gradeInfo = getGradeFromScore(result.score);
+              return (
+                <div key={result._id || result.id} style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  padding: '1.25rem 1.5rem',
+                  backgroundColor: 'rgba(255, 255, 255, 0.03)',
+                  border: '1px solid var(--glass-border)',
+                  borderRadius: '16px',
+                  transition: 'all 0.3s ease',
+                  cursor: 'default'
+                }}
+                onMouseOver={(e) => {
+                  e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.06)';
+                  e.currentTarget.style.transform = 'translateY(-2px)';
+                }}
+                onMouseOut={(e) => {
+                  e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.03)';
+                  e.currentTarget.style.transform = 'translateY(0)';
+                }}>
+                  <div style={{ flex: 2 }}>
+                    <div style={{ 
+                      color: 'var(--pure-pearl)', 
+                      fontSize: '1.15rem', 
+                      fontWeight: '600',
+                      marginBottom: '0.25rem'
+                    }}>
+                      {result.subject}
+                    </div>
+                    <div style={{ 
+                      color: 'var(--text-muted)', 
+                      fontSize: '0.9rem',
+                      fontWeight: '500'
+                    }}>
+                      {result.topic}
+                    </div>
+                  </div>
+
+                  <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
+                    <div style={{ color: 'var(--pure-pearl)', fontSize: '0.95rem' }}>
+                      <span style={{ opacity: 0.7 }}>Accuracy:</span> {result.correctAnswers}/{result.totalQuestions}
+                    </div>
+                    <div style={{ color: 'var(--pure-pearl)', fontSize: '0.95rem' }}>
+                      <span style={{ opacity: 0.7 }}>Time:</span> {formatQuizTime(result.timeTaken)}
+                    </div>
+                  </div>
+
+                  <div style={{ flex: 1, textAlign: 'right' }}>
+                    <div style={{ color: 'var(--text-muted)', fontSize: '0.85rem', marginBottom: '0.5rem' }}>
+                      {new Date(result.completedAt).toLocaleDateString(undefined, { 
+                        year: 'numeric', month: 'short', day: 'numeric' 
+                      })}
+                    </div>
+                    <div style={{ 
+                      display: 'inline-block',
+                      padding: '0.4rem 1rem',
+                      borderRadius: '20px',
+                      backgroundColor: `${gradeInfo.color}20`,
+                      color: gradeInfo.color,
+                      fontWeight: '700',
+                      fontSize: '1.1rem',
+                      border: `1px solid ${gradeInfo.color}40`
+                    }}>
+                      {result.score}%
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

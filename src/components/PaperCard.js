@@ -3,15 +3,12 @@ import { getPaper, deletePaper } from "../services/paperService";
 
 function PaperCard({ paper, onInteraction, isTeacher }) {
   const [isLoading, setIsLoading] = useState(false);
-  const [showPdf, setShowPdf] = useState(false);
-  const [pdfUrl, setPdfUrl] = useState("");
 
   const handleViewPdf = async () => {
     setIsLoading(true);
     try {
       const res = await getPaper(paper._id);
-      setPdfUrl(`http://localhost:5000${res.data.pdfUrl}`);
-      setShowPdf(true);
+      window.open(`http://localhost:5000${res.data.pdfUrl}`, '_blank');
       onInteraction(); // Refresh to update download count
     } catch (error) {
       alert("Failed to load PDF");
@@ -157,86 +154,7 @@ function PaperCard({ paper, onInteraction, isTeacher }) {
         </div>
       </div>
 
-      {/* PDF Viewer Modal */}
-      {showPdf && (
-        <div style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          backgroundColor: 'rgba(0, 0, 0, 0.8)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          zIndex: 2000
-        }}>
-          <div className="glass-card" style={{
-            width: '95%',
-            height: '95%',
-            maxWidth: '1400px',
-            display: 'flex',
-            flexDirection: 'column',
-            background: 'rgba(250, 250, 255, 0.98)',
-            padding: 0,
-            overflow: 'hidden'
-          }}>
-            {/* PDF Header */}
-            <div style={{
-              padding: '1rem',
-              borderBottom: '1px solid #ddd',
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center'
-            }}>
-              <h3 style={{ margin: 0, color: '#333' }}>{paper.title}</h3>
-              <div style={{ display: 'flex', gap: '0.5rem' }}>
-                <button
-                  onClick={handleDownload}
-                  style={{
-                    padding: '0.5rem 1rem',
-                    backgroundColor: '#28a745',
-                    color: 'white',
-                    border: 'none',
-                    borderRadius: '5px',
-                    fontSize: '0.9rem',
-                    cursor: 'pointer'
-                  }}
-                >
-                  📥 Download
-                </button>
-                <button
-                  onClick={() => setShowPdf(false)}
-                  style={{
-                    padding: '0.5rem 1rem',
-                    backgroundColor: '#6c757d',
-                    color: 'white',
-                    border: 'none',
-                    borderRadius: '5px',
-                    fontSize: '0.9rem',
-                    cursor: 'pointer'
-                  }}
-                >
-                  Close
-                </button>
-              </div>
-            </div>
-            
-            {/* PDF Content */}
-            <div style={{ flex: 1, padding: '1rem', overflow: 'auto' }}>
-              <iframe
-                src={pdfUrl}
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  border: 'none'
-                }}
-                title={paper.title}
-              />
-            </div>
-          </div>
-        </div>
-      )}
+
     </>
   );
 }

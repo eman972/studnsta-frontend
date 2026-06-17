@@ -4,16 +4,13 @@ import { createPost } from "../services/postService";
 function AddPostModal({ onClose, onPostCreated }) {
   const [formData, setFormData] = useState({
     content: "",
-    subject: "Math",
-    chapter: "",
+    subject: "",
   });
   const [isLoading, setIsLoading] = useState(false);
-
-  const subjects = ["Math", "Physics", "Chemistry", "Biology", "Computer", "English", "Urdu", "Pak Studies", "Islamiat"];
   
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!formData.content.trim() || !formData.chapter.trim()) {
+    if (!formData.content.trim() || !formData.subject.trim()) {
       alert("Please fill in all required fields");
       return;
     }
@@ -24,7 +21,6 @@ function AddPostModal({ onClose, onPostCreated }) {
       const postFormData = new FormData();
       postFormData.append("content", formData.content);
       postFormData.append("subject", formData.subject);
-      postFormData.append("chapter", formData.chapter);
 
       await createPost(postFormData);
       onPostCreated();
@@ -150,52 +146,17 @@ function AddPostModal({ onClose, onPostCreated }) {
           </div>
 
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.25rem', marginBottom: '1.5rem' }}>
+          <div style={{ marginBottom: '1.5rem' }}>
             <div>
               <label style={{ display: 'block', marginBottom: '0.5rem', color: '#374151', fontSize: '0.875rem', fontWeight: '600', letterSpacing: '0.025em' }}>
-                Subject
-              </label>
-              <select
-                name="subject"
-                value={formData.subject}
-                onChange={handleChange}
-                style={{
-                  width: '100%',
-                  padding: '0.875rem',
-                  border: '1px solid #e5e7eb',
-                  borderRadius: '10px',
-                  fontSize: '0.95rem',
-                  outline: 'none',
-                  backgroundColor: '#ffffff',
-                  fontWeight: '500',
-                  color: '#374151',
-                  transition: 'all 0.2s',
-                  cursor: 'pointer'
-                }}
-                onFocus={(e) => {
-                  e.target.style.borderColor = '#667eea';
-                  e.target.style.boxShadow = '0 0 0 3px rgba(102, 126, 234, 0.1)';
-                }}
-                onBlur={(e) => {
-                  e.target.style.borderColor = '#e5e7eb';
-                  e.target.style.boxShadow = 'none';
-                }}
-              >
-                {subjects.map(subject => (
-                  <option key={subject} value={subject}>{subject}</option>
-                ))}
-              </select>
-            </div>
-
-            <div>
-              <label style={{ display: 'block', marginBottom: '0.5rem', color: '#374151', fontSize: '0.875rem', fontWeight: '600', letterSpacing: '0.025em' }}>
-                Chapter *
+                Topic
               </label>
               <input
                 type="text"
-                name="chapter"
-                value={formData.chapter}
+                name="subject"
+                value={formData.subject}
                 onChange={handleChange}
+                placeholder="What is this post about?"
                 required
                 style={{
                   width: '100%',

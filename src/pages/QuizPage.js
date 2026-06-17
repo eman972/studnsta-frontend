@@ -332,7 +332,7 @@ function QuizPage() {
       }
     } catch (error) {
       console.error("Error saving quiz result:", error);
-      alert("Failed to save quiz result");
+      alert("Failed to save quiz result: " + (error.response?.data?.message || error.message));
     } finally {
       setIsSubmitting(false);
     }

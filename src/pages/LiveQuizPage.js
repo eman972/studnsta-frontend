@@ -6,7 +6,7 @@ import { getGradeFromScore, formatQuizTime } from "../services/quizApiService";
 function LiveQuizPage() {
   const location = useLocation();
   const navigate = useNavigate();
-  const quizId = location.pathname.split('/').pop(); // Extract quiz ID from URL
+  const quizId = decodeURIComponent(location.pathname.split('/').pop()).trim(); // Extract and clean quiz ID
   
   const [quiz, setQuiz] = useState(null);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -57,7 +57,8 @@ function LiveQuizPage() {
       }
     } catch (error) {
       console.error("Error fetching quiz:", error);
-      alert("Failed to load quiz");
+      const msg = error.response?.data?.message || error.message;
+      alert(`Failed to load quiz: ${msg}`);
       navigate('/home');
     } finally {
       setIsLoading(false);
