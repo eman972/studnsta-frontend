@@ -2,12 +2,11 @@ import { useState, useRef, useEffect } from "react";
 import { sendMessage } from "../services/aiService";
 
 const SUGGESTIONS = [
-  "Explain Newton's laws of motion",
-  "Solve: 2x² + 5x - 3 = 0",
-  "What is photosynthesis?",
-  "Explain the Pakistan Movement briefly",
-  "What is Ohm's Law?",
-  "Explain the water cycle",
+  "Find the derivative of x^3 + 2x",
+  "Explain stacks and queues",
+  "Make a truth table for A AND B",
+  "Improve this English paragraph",
+  "Explain variables in programming",
 ];
 
 /** Very lightweight markdown renderer for bold/code/newlines */
@@ -29,19 +28,22 @@ function AiTutor() {
     {
       role: "assistant",
       content:
-        "Hi! I'm Studnsta AI 🎓 Ask me anything about your studies — Math, Physics, Chemistry, Biology, English, and more!\n\nI'm here to help with Pakistani curriculum (FBISE, Punjab Board, Sindh Board).",
+        "Hi! I'm Studnsta AI. I can help you with Calculus, Data Structures, Digital Logic Design, English, and Introduction to Programming.\n\nAsk me for explanations, solved examples, practice questions, assignments, or exam preparation.",
     },
   ]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [modelUsed, setModelUsed] = useState(null);
   const [error, setError] = useState(null);
-  const bottomRef = useRef(null);
+  const chatContainerRef = useRef(null);
   const textareaRef = useRef(null);
 
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+    const container = chatContainerRef.current;
+    if (container) {
+      container.scrollTo({ top: container.scrollHeight, behavior: "smooth" });
+    }
+  }, [messages, isLoading]);
 
   const handleSend = async (text) => {
     const userText = (text || input).trim();
@@ -106,7 +108,7 @@ function AiTutor() {
       {
         role: "assistant",
         content:
-          "Hi! I'm Studnsta AI 🎓 Ask me anything about your studies — Math, Physics, Chemistry, Biology, English, and more!",
+          "Hi! I'm Studnsta AI. I can help you with Calculus, Data Structures, Digital Logic Design, English, and Introduction to Programming.",
       },
     ]);
     setError(null);
@@ -222,6 +224,7 @@ function AiTutor() {
 
       {/* Chat window */}
       <div
+        ref={chatContainerRef}
         style={{
           flex: 1,
           overflowY: "auto",
@@ -331,8 +334,6 @@ function AiTutor() {
             </div>
           </div>
         )}
-
-        <div ref={bottomRef} />
       </div>
 
       {/* Suggestions (only show at start) */}
