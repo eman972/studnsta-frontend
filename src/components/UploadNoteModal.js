@@ -1,20 +1,20 @@
 import { useState } from "react";
-import { uploadPaper } from "../services/paperService";
+import { uploadNote } from "../services/noteService";
 
-function UploadPaperModal({ onClose, onPaperUploaded }) {
+function UploadNoteModal({ onClose, onNoteUploaded }) {
   const [formData, setFormData] = useState({
     title: "",
     description: "",
     subject: "Math",
     chapter: "",
     year: "2024",
-    paperType: "Past Paper",
+    noteType: "Past Note",
   });
   const [pdfFile, setPdfFile] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
   const subjects = ["Math", "Physics", "Chemistry", "Biology", "Computer", "English", "Urdu", "Pak Studies", "Islamiat"];
-  const paperTypes = ["Past Paper", "Key Book", "Notes"];
+  const noteTypes = ["Past Note", "Key Book", "Notes"];
   const years = Array.from({ length: 10 }, (_, i) => (2024 - i).toString());
   
   const handleSubmit = async (e) => {
@@ -27,18 +27,18 @@ function UploadPaperModal({ onClose, onPaperUploaded }) {
     setIsLoading(true);
     
     try {
-      const paperFormData = new FormData();
-      paperFormData.append("title", pdfFile.name.replace(/\.[^/.]+$/, "")); // use filename without extension
-      paperFormData.append("description", "Uploaded Document");
-      paperFormData.append("paperType", "Notes");
-      paperFormData.append("pdf", pdfFile);
+      const noteFormData = new FormData();
+      noteFormData.append("title", pdfFile.name.replace(/\.[^/.]+$/, "")); // use filename without extension
+      noteFormData.append("description", "Uploaded Document");
+      noteFormData.append("noteType", "Notes");
+      noteFormData.append("pdf", pdfFile);
 
-      await uploadPaper(paperFormData);
-      onPaperUploaded();
+      await uploadNote(noteFormData);
+      onNoteUploaded();
       onClose();
     } catch (error) {
       console.error(error);
-      alert(`Failed to upload paper: ${error.response?.data?.message || error.message}`);
+      alert(`Failed to upload note: ${error.response?.data?.message || error.message}`);
     } finally {
       setIsLoading(false);
     }
@@ -80,7 +80,7 @@ function UploadPaperModal({ onClose, onPaperUploaded }) {
         overflowY: 'auto'
       }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-          <h3 style={{ margin: 0, color: '#333' }}>Upload Paper</h3>
+          <h3 style={{ margin: 0, color: '#333' }}>Upload Note</h3>
           <button
             onClick={onClose}
             style={{
@@ -152,7 +152,7 @@ function UploadPaperModal({ onClose, onPaperUploaded }) {
                 cursor: isLoading ? 'not-allowed' : 'pointer'
               }}
             >
-              {isLoading ? 'Uploading...' : 'Upload Paper'}
+              {isLoading ? 'Uploading...' : 'Upload Note'}
             </button>
           </div>
         </form>
@@ -161,4 +161,4 @@ function UploadPaperModal({ onClose, onPaperUploaded }) {
   );
 }
 
-export default UploadPaperModal;
+export default UploadNoteModal;

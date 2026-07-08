@@ -1,13 +1,13 @@
 import { useState } from "react";
-import { getPaper, deletePaper } from "../services/paperService";
+import { getNote, deleteNote } from "../services/noteService";
 
-function PaperCard({ paper, onInteraction, isTeacher }) {
+function NoteCard({ note, onInteraction, isTeacher }) {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleViewPdf = async () => {
     setIsLoading(true);
     try {
-      const res = await getPaper(paper._id);
+      const res = await getNote(note._id);
       window.open(`http://localhost:5000${res.data.pdfUrl}`, '_blank');
       onInteraction(); // Refresh to update download count
     } catch (error) {
@@ -19,8 +19,8 @@ function PaperCard({ paper, onInteraction, isTeacher }) {
 
   const handleDownload = () => {
     const link = document.createElement('a');
-    link.href = `http://localhost:5000${paper.pdfUrl}`;
-    link.download = `${paper.title}.pdf`;
+    link.href = `http://localhost:5000${note.pdfUrl}`;
+    link.download = `${note.title}.pdf`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -28,22 +28,22 @@ function PaperCard({ paper, onInteraction, isTeacher }) {
   };
 
   const handleDelete = async () => {
-    if (window.confirm("Are you sure you want to delete this paper?")) {
+    if (window.confirm("Are you sure you want to delete this note?")) {
       setIsLoading(true);
       try {
-        await deletePaper(paper._id);
+        await deleteNote(note._id);
         onInteraction();
       } catch (error) {
-        alert("Failed to delete paper");
+        alert("Failed to delete note");
       } finally {
         setIsLoading(false);
       }
     }
   };
 
-  const getPaperTypeColor = (type) => {
+  const getNoteTypeColor = (type) => {
     switch (type) {
-      case "Past Paper": return "#e3f2fd";
+      case "Past Note": return "#e3f2fd";
 
       case "Key Book": return "#e8f5e8";
       case "Notes": return "#fff3e0";
@@ -51,9 +51,9 @@ function PaperCard({ paper, onInteraction, isTeacher }) {
     }
   };
 
-  const getPaperTypeTextColor = (type) => {
+  const getNoteTypeTextColor = (type) => {
     switch (type) {
-      case "Past Paper": return "#1976d2";
+      case "Past Note": return "#1976d2";
 
       case "Key Book": return "#388e3c";
       case "Notes": return "#f57c00";
@@ -78,7 +78,7 @@ function PaperCard({ paper, onInteraction, isTeacher }) {
         }}>
           <div style={{ flex: 1 }}>
             <h3 style={{ margin: '0', color: '#333', fontSize: '1.2rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              📄 {paper.title}
+              📄 {note.title}
             </h3>
           </div>
         </div>
@@ -92,10 +92,10 @@ function PaperCard({ paper, onInteraction, isTeacher }) {
           color: '#666'
         }}>
           <div>
-            Uploaded by <strong>{paper.uploadedBy.name}</strong> ({paper.uploadedBy.role})
+            Uploaded by <strong>{note.uploadedBy.name}</strong> ({note.uploadedBy.role})
           </div>
           <div>
-            📥 {paper.downloads} downloads
+            📥 {note.downloads} downloads
           </div>
         </div>
 
@@ -115,7 +115,7 @@ function PaperCard({ paper, onInteraction, isTeacher }) {
               letterSpacing: '0.05em'
             }}
           >
-            {isLoading ? 'Unlocking...' : '👁️ View Paper'}
+            {isLoading ? 'Unlocking...' : '👁️ View Note'}
           </button>
           
           <button
@@ -134,7 +134,7 @@ function PaperCard({ paper, onInteraction, isTeacher }) {
             📥 Download
           </button>
           
-          {isTeacher && paper.uploadedBy._id === localStorage.getItem("userId") && (
+          {isTeacher && note.uploadedBy._id === localStorage.getItem("userId") && (
             <button
               onClick={handleDelete}
               disabled={isLoading}
@@ -159,4 +159,4 @@ function PaperCard({ paper, onInteraction, isTeacher }) {
   );
 }
 
-export default PaperCard;
+export default NoteCard;

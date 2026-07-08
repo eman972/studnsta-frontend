@@ -2,7 +2,7 @@ import { Routes, Route } from "react-router-dom";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Home from "./pages/Home";
-import Papers from "./pages/Papers";
+import Notes from "./pages/Notes";
 import Profile from "./pages/Profile";
 import ProgressDashboard from "./pages/ProgressDashboard";
 import QuizSetup from "./pages/QuizSetup";
@@ -62,7 +62,7 @@ function App() {
                   <div style={{ padding: "2rem", flex: 1 }}>
                     <Routes>
                       <Route path="/home" element={<Home />} />
-                      <Route path="/papers" element={<Papers />} />
+                      <Route path="/notes" element={<Notes />} />
                       <Route path="/profile/:userId?" element={<Profile />} />
                       <Route path="/progress" element={<ProgressDashboard />} />
                       <Route path="/quiz-setup" element={<QuizSetup />} />

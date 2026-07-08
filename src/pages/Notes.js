@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-import { getPapers } from "../services/paperService";
-import PaperCard from "../components/PaperCard";
-import UploadPaperModal from "../components/UploadPaperModal";
+import { getNotes } from "../services/noteService";
+import NoteCard from "../components/NoteCard";
+import UploadNoteModal from "../components/UploadNoteModal";
 
-function Papers() {
-  const [papers, setPapers] = useState([]);
+function Notes() {
+  const [notes, setNotes] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [userRole, setUserRole] = useState("");
   const [showUploadModal, setShowUploadModal] = useState(false);
@@ -12,24 +12,24 @@ function Papers() {
   useEffect(() => {
     const role = localStorage.getItem("userRole");
     setUserRole(role || "guest");
-    fetchPapers();
+    fetchNotes();
   }, []);
 
-  const fetchPapers = async () => {
+  const fetchNotes = async () => {
     setIsLoading(true);
     try {
-      const res = await getPapers({});
-      setPapers(res.data);
+      const res = await getNotes({});
+      setNotes(res.data);
     } catch (error) {
-      console.log("Failed to fetch papers");
-      setPapers([]);
+      console.log("Failed to fetch notes");
+      setNotes([]);
     } finally {
       setIsLoading(false);
     }
   };
 
   const handleInteraction = () => {
-    fetchPapers();
+    fetchNotes();
   };
 
   return (
@@ -64,19 +64,21 @@ function Papers() {
               Download PDF books, course notes, and study materials
             </p>
           </div>
-          <button
-            onClick={() => setShowUploadModal(true)}
-            className="glow-button"
-            style={{
-              padding: '0.8rem 1.5rem',
-              fontSize: '1rem',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '0.5rem'
-            }}
-          >
-            <span>➕</span> Upload PDF
-          </button>
+          {userRole?.toLowerCase() !== "student" && (
+            <button
+              onClick={() => setShowUploadModal(true)}
+              className="glow-button"
+              style={{
+                padding: '0.8rem 1.5rem',
+                fontSize: '1rem',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.5rem'
+              }}
+            >
+              <span>➕</span> Upload PDF
+            </button>
+          )}
         </div>
       </div>
 
@@ -85,22 +87,22 @@ function Papers() {
       {/* Loading State */}
       {isLoading && (
         <div style={{ textAlign: 'center', padding: '2rem' }}>
-          <div style={{ fontSize: '1.2rem', color: '#666' }}>Loading papers...</div>
+          <div style={{ fontSize: '1.2rem', color: '#666' }}>Loading notes...</div>
         </div>
       )}
 
-      {/* Papers List */}
-      {!isLoading && papers.map((paper) => (
-        <PaperCard 
-          key={paper._id} 
-          paper={paper} 
+      {/* Notes List */}
+      {!isLoading && notes.map((note) => (
+        <NoteCard 
+          key={note._id} 
+          note={note} 
           onInteraction={handleInteraction}
           isTeacher={userRole === "teacher"}
         />
       ))}
 
       {/* Empty State */}
-      {!isLoading && papers.length === 0 && (
+      {!isLoading && notes.length === 0 && (
         <div className="glass-card" style={{
           padding: '5rem 3rem',
           textAlign: 'center',
@@ -116,13 +118,13 @@ function Papers() {
 
       {/* Upload Modal */}
       {showUploadModal && (
-        <UploadPaperModal
+        <UploadNoteModal
           onClose={() => setShowUploadModal(false)}
-          onPaperUploaded={fetchPapers}
+          onNoteUploaded={fetchNotes}
         />
       )}
     </div>
   );
 }
 
-export default Papers;
+export default Notes;

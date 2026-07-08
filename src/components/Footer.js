@@ -11,7 +11,7 @@ const Footer = () => {
       { name: 'Email', icon: '📧', url: 'mailto:support@studnsta.com' }
     ],
     academicHub: [
-      { name: 'Research Papers', url: '#' },
+      { name: 'Research Notes', url: '#' },
       { name: 'Study Guides', url: '#' },
       { name: 'Academic integrity', url: '#' },
       { name: 'Student Forums', url: '#' },
@@ -149,7 +149,7 @@ const Footer = () => {
             🎓 STUDNSTA
           </div>
           <p style={{ color: 'rgba(250, 250, 255, 0.6)', fontSize: '1rem', maxWidth: '320px', lineHeight: '1.7', fontWeight: '500' }}>
-            Empowering students with accessible academic papers and a collaborative community. Step into the future of learning.
+            Empowering students with accessible academic notes and a collaborative community. Step into the future of learning.
           </p>
         </div>
       </div>

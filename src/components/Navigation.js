@@ -5,6 +5,7 @@ function Navigation() {
   const navigate = useNavigate();
   const location = useLocation();
   const [user] = useState(JSON.parse(localStorage.getItem("user") || "{}"));
+  const userRole = localStorage.getItem("userRole");
   const [isAboutOpen, setIsAboutOpen] = useState(false);
 
   const handleLogout = () => {
@@ -13,9 +14,9 @@ function Navigation() {
     navigate("/");
   };
 
-  const menuItems = [
+  const baseMenuItems = [
     { name: "Dashboard", path: "/home", icon: "Dashboard" },
-    { name: "Study Notes", path: "/papers", icon: "Notes" },
+    { name: "Study Notes", path: "/notes", icon: "Notes" },
     { name: "My Progress", path: "/progress", icon: "Analytics" },
     { name: "Practice Quiz", path: "/quiz-setup", icon: "Quiz" },
     { name: "AI Tutor", path: "/ai-tutor", icon: "AI" },
@@ -23,6 +24,10 @@ function Navigation() {
     { name: "Profile", path: "/profile", icon: "Person" },
     { name: "Help & Safety", path: "/privacy", icon: "Help" },
   ];
+
+  const menuItems = baseMenuItems.filter(item => 
+    !(userRole?.toLowerCase() === "student" && item.path === "/live-quiz-setup")
+  );
 
   const isActive = (path) => {
     if (path === "/profile") return location.pathname.startsWith("/profile");

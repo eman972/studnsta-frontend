@@ -6,6 +6,7 @@ function PostCard({ post, onInteraction, onOpenComments, isActive }) {
   const [isCommenting, setIsCommenting] = useState(false);
   const [commentText, setCommentText] = useState("");
   const [isSaving, setIsSaving] = useState(false);
+  const [isCommentsVisible, setIsCommentsVisible] = useState(false);
 
   const handleSave = async () => {
     setIsSaving(true);
@@ -94,7 +95,7 @@ function PostCard({ post, onInteraction, onOpenComments, isActive }) {
             {!post.author.avatar && (post.author.name.charAt(0).toUpperCase())}
           </div>
           <div>
-            <div style={{ fontWeight: '800', color: 'var(--text-dark)', fontSize: '1.1rem' }}>{post.author.name}</div>
+            <div style={{ fontWeight: '800', color: '#000000', fontSize: '1.1rem' }}>{post.author.name}</div>
             <div style={{ fontSize: '0.85rem', color: 'var(--rich-lavender)', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
               {post.author.role}
             </div>
@@ -142,7 +143,7 @@ function PostCard({ post, onInteraction, onOpenComments, isActive }) {
         </div>
         
         <p style={{ 
-          color: 'var(--text-dark)', 
+          color: '#000000', 
           lineHeight: '1.8', 
           marginBottom: '1.75rem', 
           fontSize: '1.1rem',
@@ -184,7 +185,10 @@ function PostCard({ post, onInteraction, onOpenComments, isActive }) {
           </button>
           
           <button
-            onClick={onOpenComments}
+            onClick={() => {
+              setIsCommentsVisible(!isCommentsVisible);
+              if (onOpenComments) onOpenComments();
+            }}
             style={{
               background: isActive ? 'rgba(182, 102, 210, 0.1)' : 'none',
               border: isActive ? '1px solid var(--rich-lilac)' : 'none',
@@ -230,6 +234,55 @@ function PostCard({ post, onInteraction, onOpenComments, isActive }) {
             <span style={{ fontSize: '1rem' }}>{post.saves ? post.saves.length : 0}</span>
           </button>
         </div>
+
+        {/* Comments Section */}
+        {isCommentsVisible && (
+          <div style={{ marginTop: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+            {post.comments && post.comments.length > 0 ? (
+              post.comments.map((comment, index) => (
+                <div key={comment._id || index} style={{
+                  background: 'rgba(255, 255, 255, 0.6)',
+                  padding: '1rem',
+                  borderRadius: '12px',
+                  border: '1px solid var(--border-color)'
+                }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.5rem' }}>
+                    <div style={{
+                      width: '32px',
+                      height: '32px',
+                      borderRadius: '10px',
+                      backgroundColor: comment.user?.avatar ? 'transparent' : 'var(--rich-lilac)',
+                      backgroundImage: comment.user?.avatar ? `url(http://localhost:5000${comment.user.avatar})` : 'none',
+                      backgroundSize: 'cover',
+                      backgroundPosition: 'center',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      color: 'white',
+                      fontWeight: '800',
+                      fontSize: '0.9rem'
+                    }}>
+                      {!comment.user?.avatar && (comment.user?.name ? comment.user.name.charAt(0).toUpperCase() : '?')}
+                    </div>
+                    <div style={{ fontWeight: '700', color: '#000000', fontSize: '0.95rem' }}>
+                      {comment.user?.name || 'Unknown User'}
+                    </div>
+                    <div style={{ marginLeft: 'auto', fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+                      {new Date(comment.createdAt).toLocaleDateString()}
+                    </div>
+                  </div>
+                  <p style={{ margin: 0, color: '#000000', fontSize: '0.95rem', lineHeight: '1.5' }}>
+                    {comment.text}
+                  </p>
+                </div>
+              ))
+            ) : (
+              <div style={{ color: 'var(--text-muted)', fontSize: '0.9rem', textAlign: 'center', padding: '1rem 0' }}>
+                No comments yet. Be the first to reply!
+              </div>
+            )}
+          </div>
+        )}
 
         {/* Comment Entry Area (Quick Ref) */}
         <div style={{ marginTop: '1.5rem' }}>

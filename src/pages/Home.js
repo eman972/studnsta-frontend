@@ -43,6 +43,46 @@ function Home() {
     <div className="page-container">
       {/* Main Content Area: Feed */}
       <div className="flex-col gap-6">
+        {/* Header */}
+        <div className="glass-card" style={{
+          padding: '2.5rem',
+          marginBottom: '1rem'
+        }}>
+          <div style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}>
+            <div>
+              <h1 style={{ 
+                margin: 0, 
+                background: 'linear-gradient(135deg, var(--rich-lavender), var(--rich-lilac))',
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent',
+                fontSize: '2.2rem', 
+                fontWeight: '900'
+              }}>
+                🌟 Community Feed
+              </h1>
+              <p style={{ margin: '0.4rem 0 0 0', color: 'var(--midnight-charcoal)', opacity: 0.7, fontSize: '1rem', fontWeight: '500' }}>
+                Join the discussion and share your thoughts
+              </p>
+            </div>
+            <button
+              onClick={() => setShowAddPost(true)}
+              className="glow-button"
+              style={{
+                padding: '0.8rem 1.5rem',
+                fontSize: '1rem',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.5rem'
+              }}
+            >
+              <span>➕</span> Create Post
+            </button>
+          </div>
+        </div>
           {/* Loading State */}
           {isLoading && (
             <div className="text-center" style={{ padding: '5rem' }}>
