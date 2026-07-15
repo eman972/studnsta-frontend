@@ -57,18 +57,18 @@ function AddPostModal({ onClose, onPostCreated }) {
         maxWidth: '650px',
         maxHeight: '90vh',
         overflowY: 'auto',
-        background: 'rgba(255, 255, 255, 0.95)',
-        backdropFilter: 'blur(20px)',
-        border: '1px solid rgba(255, 255, 255, 0.3)',
+        background: 'rgba(255, 255, 255, 0.1)',
+        backdropFilter: 'blur(25px)',
+        border: '1px solid rgba(163, 100, 255, 0.2)',
         borderRadius: '24px',
-        boxShadow: '0 20px 60px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(255, 255, 255, 0.1)',
+        boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
         animation: 'slideUp 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275)'
       }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '2rem' }}>
           <div>
             <h2 style={{ 
               margin: 0, 
-              background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+              background: 'linear-gradient(135deg, var(--rich-lavender), var(--rich-lilac))',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
               fontSize: '2rem', 
@@ -76,31 +76,29 @@ function AddPostModal({ onClose, onPostCreated }) {
               letterSpacing: '-0.03em',
               lineHeight: '1.2'
             }}>Create Post</h2>
-            <p style={{ margin: '0.5rem 0 0 0', color: '#6b7280', fontSize: '0.95rem', fontWeight: '500', opacity: 0.8 }}>Share your thoughts with the community</p>
+            <p style={{ margin: '0.5rem 0 0 0', color: 'var(--text-secondary)', fontSize: '0.95rem', fontWeight: '500', opacity: 0.8 }}>Share your thoughts with the community</p>
           </div>
           <button
             onClick={onClose}
             style={{
-              background: 'rgba(249, 250, 251, 0.8)',
-              border: '1px solid rgba(229, 231, 235, 0.5)',
+              background: 'transparent',
+              border: 'none',
               width: '36px',
               height: '36px',
               borderRadius: '10px',
               fontSize: '1.4rem',
               cursor: 'pointer',
-              color: '#6b7280',
+              color: 'var(--text-secondary)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               transition: 'all 0.2s'
             }}
             onMouseOver={(e) => {
-              e.target.style.backgroundColor = 'rgba(243, 244, 246, 0.9)';
-              e.target.style.color = '#374151';
+              e.target.style.color = 'var(--white)';
             }}
             onMouseOut={(e) => {
-              e.target.style.backgroundColor = 'rgba(249, 250, 251, 0.8)';
-              e.target.style.color = '#6b7280';
+              e.target.style.color = 'var(--text-secondary)';
             }}
           >
             ×
@@ -109,7 +107,7 @@ function AddPostModal({ onClose, onPostCreated }) {
 
         <form onSubmit={handleSubmit}>
           <div style={{ marginBottom: '1.5rem' }}>
-            <label style={{ display: 'block', marginBottom: '0.5rem', color: '#374151', fontSize: '0.875rem', fontWeight: '600', letterSpacing: '0.025em' }}>
+            <label style={{ display: 'block', marginBottom: '0.5rem', color: 'var(--text-secondary)', fontSize: '0.875rem', fontWeight: '600', letterSpacing: '0.025em' }}>
               Your Thoughts *
             </label>
             <textarea
@@ -121,25 +119,25 @@ function AddPostModal({ onClose, onPostCreated }) {
               style={{
                 width: '100%',
                 padding: '1rem',
-                border: '1px solid #e5e7eb',
+                border: '1px solid rgba(255, 255, 255, 0.2)',
                 borderRadius: '12px',
                 fontSize: '1rem',
                 minHeight: '120px',
                 resize: 'none',
                 outline: 'none',
                 boxSizing: 'border-box',
-                backgroundColor: '#ffffff',
-                color: '#374151',
+                backgroundColor: 'rgba(0, 0, 0, 0.2)',
+                color: 'var(--white)',
                 transition: 'all 0.2s',
                 lineHeight: '1.5',
                 fontFamily: 'inherit'
               }}
               onFocus={(e) => {
-                e.target.style.borderColor = '#667eea';
-                e.target.style.boxShadow = '0 0 0 3px rgba(102, 126, 234, 0.1)';
+                e.target.style.borderColor = 'var(--brand-500)';
+                e.target.style.boxShadow = '0 0 0 3px rgba(168, 85, 247, 0.2)';
               }}
               onBlur={(e) => {
-                e.target.style.borderColor = '#e5e7eb';
+                e.target.style.borderColor = 'rgba(255, 255, 255, 0.2)';
                 e.target.style.boxShadow = 'none';
               }}
             />
@@ -148,7 +146,7 @@ function AddPostModal({ onClose, onPostCreated }) {
 
           <div style={{ marginBottom: '1.5rem' }}>
             <div>
-              <label style={{ display: 'block', marginBottom: '0.5rem', color: '#374151', fontSize: '0.875rem', fontWeight: '600', letterSpacing: '0.025em' }}>
+              <label style={{ display: 'block', marginBottom: '0.5rem', color: 'var(--text-secondary)', fontSize: '0.875rem', fontWeight: '600', letterSpacing: '0.025em' }}>
                 Topic
               </label>
               <input
@@ -161,22 +159,22 @@ function AddPostModal({ onClose, onPostCreated }) {
                 style={{
                   width: '100%',
                   padding: '0.875rem',
-                  border: '1px solid #e5e7eb',
+                  border: '1px solid rgba(255, 255, 255, 0.2)',
                   borderRadius: '10px',
                   fontSize: '0.95rem',
                   outline: 'none',
                   boxSizing: 'border-box',
-                  backgroundColor: '#ffffff',
+                  backgroundColor: 'rgba(0, 0, 0, 0.2)',
                   fontWeight: '500',
-                  color: '#374151',
+                  color: 'var(--white)',
                   transition: 'all 0.2s'
                 }}
                 onFocus={(e) => {
-                  e.target.style.borderColor = '#667eea';
-                  e.target.style.boxShadow = '0 0 0 3px rgba(102, 126, 234, 0.1)';
+                  e.target.style.borderColor = 'var(--brand-500)';
+                  e.target.style.boxShadow = '0 0 0 3px rgba(168, 85, 247, 0.2)';
                 }}
                 onBlur={(e) => {
-                  e.target.style.borderColor = '#e5e7eb';
+                  e.target.style.borderColor = 'rgba(255, 255, 255, 0.2)';
                   e.target.style.boxShadow = 'none';
                 }}
               />
@@ -191,9 +189,9 @@ function AddPostModal({ onClose, onPostCreated }) {
               style={{
                 flex: 1,
                 padding: '0.875rem 1.5rem',
-                backgroundColor: '#ffffff',
-                color: '#6b7280',
-                border: '1px solid #e5e7eb',
+                background: 'var(--accent-soft)',
+                color: 'var(--rich-lavender)',
+                border: 'none',
                 borderRadius: '10px',
                 fontSize: '0.95rem',
                 fontWeight: '600',
@@ -201,14 +199,12 @@ function AddPostModal({ onClose, onPostCreated }) {
                 transition: 'all 0.2s'
               }}
               onMouseOver={(e) => {
-                e.target.style.backgroundColor = '#f9fafb';
-                e.target.style.borderColor = '#d1d5db';
-                e.target.style.color = '#374151';
+                e.target.style.background = 'rgba(168, 85, 247, 0.2)';
+                e.target.style.color = 'var(--white)';
               }}
               onMouseOut={(e) => {
-                e.target.style.backgroundColor = '#ffffff';
-                e.target.style.borderColor = '#e5e7eb';
-                e.target.style.color = '#6b7280';
+                e.target.style.background = 'var(--accent-soft)';
+                e.target.style.color = 'var(--rich-lavender)';
               }}
             >
               Discard
@@ -219,8 +215,8 @@ function AddPostModal({ onClose, onPostCreated }) {
               style={{
                 flex: 2,
                 padding: '0.875rem 1.5rem',
-                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                color: '#ffffff',
+                background: 'linear-gradient(135deg, var(--brand-500), var(--brand-600))',
+                color: 'var(--white)',
                 border: 'none',
                 borderRadius: '10px',
                 fontSize: '0.95rem',
@@ -228,18 +224,18 @@ function AddPostModal({ onClose, onPostCreated }) {
                 cursor: isLoading ? 'not-allowed' : 'pointer',
                 transition: 'all 0.2s',
                 opacity: isLoading ? 0.7 : 1,
-                boxShadow: '0 4px 12px rgba(102, 126, 234, 0.3)'
+                boxShadow: '0 4px 12px rgba(168, 85, 247, 0.3)'
               }}
               onMouseOver={(e) => {
                 if (!isLoading) {
                   e.target.style.transform = 'translateY(-2px)';
-                  e.target.style.boxShadow = '0 6px 20px rgba(102, 126, 234, 0.4)';
+                  e.target.style.boxShadow = '0 6px 20px rgba(168, 85, 247, 0.4)';
                 }
               }}
               onMouseOut={(e) => {
                 if (!isLoading) {
                   e.target.style.transform = 'translateY(0)';
-                  e.target.style.boxShadow = '0 4px 12px rgba(102, 126, 234, 0.3)';
+                  e.target.style.boxShadow = '0 4px 12px rgba(168, 85, 247, 0.3)';
                 }
               }}
             >

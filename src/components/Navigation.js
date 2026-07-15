@@ -16,13 +16,14 @@ function Navigation() {
 
   const baseMenuItems = [
     { name: "Dashboard", path: "/home", icon: "Dashboard" },
+    { name: "Connect", path: "/connect", icon: "Connect" },
     { name: "Study Notes", path: "/notes", icon: "Notes" },
     { name: "My Progress", path: "/progress", icon: "Analytics" },
     { name: "Practice Quiz", path: "/quiz-setup", icon: "Quiz" },
     { name: "AI Tutor", path: "/ai-tutor", icon: "AI" },
     { name: "Create Quiz", path: "/live-quiz-setup", icon: "Create" },
     { name: "Profile", path: "/profile", icon: "Person" },
-    { name: "Help & Safety", path: "/privacy", icon: "Help" },
+    { name: "Guide", path: "/privacy", icon: "Help" },
   ];
 
   const menuItems = baseMenuItems.filter(item => 
@@ -37,20 +38,22 @@ function Navigation() {
   const getIcon = (iconName) => {
     const iconEmojis = {
       Dashboard: "🏠",
+      Connect: "💬",
       Notes: "📚",
       Analytics: "📈",
       Quiz: "📝",
       AI: "🤖",
       Create: "➕",
       Person: "👤",
-      Help: "🛡️",
+      Help: "❓",
+      Logout: "🔌",
     };
     return iconEmojis[iconName] || "📍";
   };
 
   return (
     <>
-      <aside className="sidebar">
+      <aside className="sidebar no-scrollbar">
         {/* Logo */}
         <div
           onClick={() => setIsAboutOpen(true)}
@@ -66,34 +69,26 @@ function Navigation() {
           onMouseOver={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
           onMouseOut={(e) => (e.currentTarget.style.transform = "scale(1)")}
         >
-          <div
-            style={{
-              width: "60px",
-              height: "60px",
-              borderRadius: "var(--radius-2xl)",
-              background: "linear-gradient(135deg, var(--brand-500), var(--brand-600))",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              fontSize: "1.8rem",
-              fontWeight: "800",
-              color: "white",
-              marginBottom: "var(--space-3)",
-              boxShadow: "var(--shadow-lg), var(--shadow-glow)",
-              position: "relative",
-              overflow: "hidden",
-            }}
-          >
-            <span style={{ position: "relative", zIndex: 1 }}>S</span>
-            <div
+          <div style={{
+            width: "65px",
+            height: "65px",
+            marginBottom: "var(--space-3)",
+            borderRadius: "50%",
+            overflow: "hidden",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            boxShadow: "0 0 15px rgba(168, 85, 247, 0.3)",
+          }}>
+            <img
+              src="/grad_cap.png"
+              alt="Studnsta Logo"
               style={{
-                position: "absolute",
-                top: "-50%",
-                left: "-50%",
-                width: "200%",
-                height: "200%",
-                background: "linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent)",
-                animation: "shimmer 3s infinite",
+                width: "75%", 
+                height: "75%",
+                objectFit: "cover",
+                objectPosition: "50% 50%",
+                mixBlendMode: "screen",
               }}
             />
           </div>
@@ -232,9 +227,20 @@ function Navigation() {
               </div>
             </div>
           </div>
-
-          <button onClick={handleLogout} className="btn-danger-outline">
-            Sign Out
+          
+          <button 
+            onClick={handleLogout} 
+            className="menu-item" 
+            style={{ 
+              marginTop: "1rem", 
+              backgroundColor: "rgba(255, 100, 100, 0.05)",
+              borderColor: "rgba(255, 100, 100, 0.2)",
+            }}
+          >
+            <span className="menu-icon">🔌</span>
+            <span style={{ flex: 1, fontSize: "0.875rem", fontWeight: "600", letterSpacing: "0.025em" }}>
+              Logout
+            </span>
           </button>
         </div>
       </aside>
@@ -259,13 +265,17 @@ function Navigation() {
           }}
         >
           <div
+            className="no-scrollbar"
             onClick={(e) => e.stopPropagation()}
             style={{
-              backgroundColor: "var(--white)",
+              background: "rgba(255, 255, 255, 0.1)",
+              backdropFilter: "blur(25px)",
               padding: "3.5rem",
               borderRadius: "40px",
               maxWidth: "650px",
               width: "90%",
+              maxHeight: "90vh",
+              overflowY: "auto",
               boxShadow: "0 30px 60px rgba(0,0,0,0.2)",
               position: "relative",
               textAlign: "center",
@@ -324,7 +334,7 @@ function Navigation() {
               style={{
                 fontSize: "1.25rem",
                 lineHeight: "1.8",
-                color: "var(--text-dark)",
+                color: "rgba(255, 255, 255, 0.85)",
                 fontWeight: "500",
                 marginBottom: "2.5rem",
                 fontFamily: "'Inter', sans-serif",
@@ -337,22 +347,6 @@ function Navigation() {
               curriculum. Experience a world where academic excellence meets modern connectivity.
             </p>
 
-            <div
-              style={{
-                display: "inline-block",
-                padding: "1rem 2.5rem",
-                borderRadius: "20px",
-                background: "linear-gradient(135deg, var(--rich-lavender), var(--rich-lilac))",
-                color: "var(--white)",
-                fontWeight: "700",
-                fontSize: "1.1rem",
-                cursor: "pointer",
-                boxShadow: "0 10px 20px rgba(163, 100, 255, 0.3)",
-              }}
-              onClick={() => setIsAboutOpen(false)}
-            >
-              Start Learning
-            </div>
           </div>
         </div>
       )}

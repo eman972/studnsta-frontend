@@ -71,16 +71,18 @@ function UploadNoteModal({ onClose, onNoteUploaded }) {
       zIndex: 1000
     }}>
       <div style={{
-        backgroundColor: 'white',
+        background: 'rgba(255, 255, 255, 0.1)',
+        backdropFilter: 'blur(25px)',
+        border: '1px solid rgba(163, 100, 255, 0.2)',
         padding: '2rem',
-        borderRadius: '10px',
+        borderRadius: '20px',
         width: '90%',
         maxWidth: '600px',
         maxHeight: '90vh',
         overflowY: 'auto'
       }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
-          <h3 style={{ margin: 0, color: '#333' }}>Upload Note</h3>
+          <h3 style={{ margin: 0, color: 'var(--white)' }}>Upload Note</h3>
           <button
             onClick={onClose}
             style={{
@@ -88,7 +90,7 @@ function UploadNoteModal({ onClose, onNoteUploaded }) {
               border: 'none',
               fontSize: '1.5rem',
               cursor: 'pointer',
-              color: '#666'
+              color: 'var(--text-secondary)'
             }}
           >
             ×
@@ -98,7 +100,7 @@ function UploadNoteModal({ onClose, onNoteUploaded }) {
         <form onSubmit={handleSubmit}>
 
           <div style={{ marginBottom: '1.5rem' }}>
-            <label style={{ display: 'block', marginBottom: '0.5rem', color: '#333', fontSize: '0.9rem' }}>
+            <label style={{ display: 'block', marginBottom: '0.5rem', color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
               PDF File *
             </label>
             <input
@@ -109,7 +111,9 @@ function UploadNoteModal({ onClose, onNoteUploaded }) {
               style={{
                 width: '100%',
                 padding: '0.5rem',
-                border: '1px solid #ddd',
+                border: '1px solid rgba(255,255,255,0.2)',
+                backgroundColor: 'rgba(0,0,0,0.2)',
+                color: 'var(--white)',
                 borderRadius: '5px',
                 fontSize: '0.9rem'
               }}
@@ -128,10 +132,10 @@ function UploadNoteModal({ onClose, onNoteUploaded }) {
               style={{
                 flex: 1,
                 padding: '0.75rem',
-                backgroundColor: '#6c757d',
-                color: 'white',
+                background: 'var(--accent-soft)',
+                color: 'var(--rich-lavender)',
                 border: 'none',
-                borderRadius: '5px',
+                borderRadius: '10px',
                 fontSize: '1rem',
                 cursor: 'pointer'
               }}
@@ -144,10 +148,10 @@ function UploadNoteModal({ onClose, onNoteUploaded }) {
               style={{
                 flex: 1,
                 padding: '0.75rem',
-                backgroundColor: isLoading ? '#ccc' : '#007bff',
-                color: 'white',
+                background: isLoading ? '#ccc' : 'linear-gradient(135deg, var(--brand-500), var(--brand-600))',
+                color: 'var(--white)',
                 border: 'none',
-                borderRadius: '5px',
+                borderRadius: '10px',
                 fontSize: '1rem',
                 cursor: isLoading ? 'not-allowed' : 'pointer'
               }}

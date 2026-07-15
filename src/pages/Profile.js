@@ -37,8 +37,8 @@ function Profile() {
     }
   };
 
-  const fetchSavedPosts = async () => {
-    setIsLoadingSaved(true);
+  const fetchSavedPosts = async (silent = false) => {
+    if (!silent) setIsLoadingSaved(true);
     try {
       const res = await getSavedPosts();
       setSavedPosts(res.data.posts || []);
@@ -46,7 +46,7 @@ function Profile() {
       console.log("Failed to fetch saved posts");
       setSavedPosts([]);
     } finally {
-      setIsLoadingSaved(false);
+      if (!silent) setIsLoadingSaved(false);
     }
   };
 
@@ -87,10 +87,11 @@ function Profile() {
   }
 
   return (
-    <div style={{ 
+    <div className="page-container" style={{ 
+      margin: '-2rem',
+      padding: '3rem',
       minHeight: '100vh', 
       backgroundColor: 'transparent',
-      padding: '2rem'
     }}>
       {/* Instagram-Style Profile Header */}
       <div style={{
@@ -391,7 +392,7 @@ function Profile() {
                 <PostCard 
                   key={post._id} 
                   post={post} 
-                  onInteraction={() => {}} // No interaction needed for saved posts view
+                  onInteraction={() => fetchSavedPosts(true)}
                   onOpenComments={() => {}} // Comments handled within PostCard
                   isActive={false}
                 />

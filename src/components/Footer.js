@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
@@ -10,13 +11,18 @@ const Footer = () => {
       { name: 'Twitter', icon: '🐦', url: '#' },
       { name: 'Email', icon: '📧', url: 'mailto:support@studnsta.com' }
     ],
-    academicHub: [
-      { name: 'Research Notes', url: '#' },
-      { name: 'Study Guides', url: '#' },
-      { name: 'Academic integrity', url: '#' },
-      { name: 'Student Forums', url: '#' },
-      { name: 'Contact Support', url: '/privacy' },
-      { name: 'Partner Universities', url: '#' }
+    forStudents: [
+      { name: 'Dashboard', url: '/home' },
+      { name: 'Community Connect', url: '/connect' },
+      { name: 'Study Notes', url: '/notes' },
+      { name: 'Practice Quiz', url: '/quiz-setup' },
+      { name: 'AI Tutor', url: '/ai-tutor' },
+      { name: 'My Progress', url: '/progress' },
+    ],
+    forTeachers: [
+      { name: 'Create Live Quiz', url: '/live-quiz-setup' },
+      { name: 'Upload Study Notes', url: '/notes' },
+      { name: 'Privacy Policy', url: '/privacy' }
     ]
   };
 
@@ -34,7 +40,7 @@ const Footer = () => {
         maxWidth: '1200px',
         margin: '0 auto',
         display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
         gap: '3rem',
         marginBottom: '3rem'
       }}>
@@ -89,7 +95,7 @@ const Footer = () => {
           </p>
         </div>
 
-        {/* Academic Hub Section */}
+        {/* For Students Section */}
         <div>
           <h3 style={{
             color: 'var(--rich-lilac)',
@@ -100,13 +106,13 @@ const Footer = () => {
             textTransform: 'uppercase',
             fontFamily: "'Outfit', sans-serif"
           }}>
-            Academic Hub
+            For Students
           </h3>
           <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
-            {footerSections.academicHub.map((link) => (
+            {footerSections.forStudents.map((link) => (
               <li key={link.name} style={{ marginBottom: '0.75rem' }}>
-                <a 
-                  href={link.url}
+                <Link 
+                  to={link.url}
                   style={{
                     color: 'rgba(250, 250, 255, 0.7)',
                     textDecoration: 'none',
@@ -125,7 +131,49 @@ const Footer = () => {
                   }}
                 >
                   {link.name}
-                </a>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        {/* For Teachers Section */}
+        <div>
+          <h3 style={{
+            color: 'var(--rich-lilac)',
+            fontSize: '1.4rem',
+            fontWeight: '800',
+            marginBottom: '1.5rem',
+            letterSpacing: '0.05em',
+            textTransform: 'uppercase',
+            fontFamily: "'Outfit', sans-serif"
+          }}>
+            For Teachers
+          </h3>
+          <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
+            {footerSections.forTeachers.map((link) => (
+              <li key={link.name} style={{ marginBottom: '0.75rem' }}>
+                <Link 
+                  to={link.url}
+                  style={{
+                    color: 'rgba(250, 250, 255, 0.7)',
+                    textDecoration: 'none',
+                    fontSize: '1rem',
+                    fontWeight: '500',
+                    transition: 'all 0.2s',
+                    display: 'inline-block'
+                  }}
+                  onMouseOver={(e) => {
+                    e.target.style.color = 'var(--rich-lilac)';
+                    e.target.style.transform = 'translateX(5px)';
+                  }}
+                  onMouseOut={(e) => {
+                    e.target.style.color = 'rgba(250, 250, 255, 0.7)';
+                    e.target.style.transform = 'translateX(0)';
+                  }}
+                >
+                  {link.name}
+                </Link>
               </li>
             ))}
           </ul>
@@ -146,7 +194,17 @@ const Footer = () => {
             fontFamily: "'Outfit', sans-serif",
             letterSpacing: '0.05em'
           }}>
-            🎓 STUDNSTA
+            <div style={{
+              width: "40px",
+              height: "40px",
+              borderRadius: "50%",
+              overflow: "hidden",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}>
+              <img src="/grad_cap.png" alt="Logo" style={{ width: "75%", height: "75%", objectFit: "cover", objectPosition: "50% 50%", mixBlendMode: "screen" }} />
+            </div> STUDNSTA
           </div>
           <p style={{ color: 'rgba(250, 250, 255, 0.6)', fontSize: '1rem', maxWidth: '320px', lineHeight: '1.7', fontWeight: '500' }}>
             Empowering students with accessible academic notes and a collaborative community. Step into the future of learning.

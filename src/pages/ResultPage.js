@@ -71,10 +71,11 @@ function ResultPage() {
   };
 
   return (
-    <div style={{ 
+    <div className="page-container" style={{ 
+      margin: '-2rem',
+      padding: '3rem',
       minHeight: '100vh', 
-      backgroundColor: 'var(--midnight-velvet)',
-      padding: '2rem',
+      backgroundColor: 'transparent',
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center'

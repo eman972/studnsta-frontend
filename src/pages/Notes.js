@@ -33,10 +33,11 @@ function Notes() {
   };
 
   return (
-    <div style={{ 
+    <div className="page-container" style={{ 
+      margin: '-2rem',
+      padding: '3rem',
       minHeight: '100vh', 
       backgroundColor: 'transparent',
-      padding: '2rem'
     }}>
       {/* Header */}
       <div className="glass-card" style={{
@@ -60,7 +61,7 @@ function Notes() {
             }}>
               📚 Course Notes & PDFs
             </h1>
-            <p style={{ margin: '0.4rem 0 0 0', color: 'var(--midnight-charcoal)', opacity: 0.7, fontSize: '1rem', fontWeight: '500' }}>
+            <p style={{ margin: '0.4rem 0 0 0', color: 'var(--text-secondary)', opacity: 0.9, fontSize: '1rem', fontWeight: '500' }}>
               Download PDF books, course notes, and study materials
             </p>
           </div>
@@ -76,7 +77,7 @@ function Notes() {
                 gap: '0.5rem'
               }}
             >
-              <span>➕</span> Upload PDF
+              <span style={{ fontSize: '1.2rem', fontWeight: 'bold' }}>+</span> Upload PDF
             </button>
           )}
         </div>
@@ -105,12 +106,11 @@ function Notes() {
       {!isLoading && notes.length === 0 && (
         <div className="glass-card" style={{
           padding: '5rem 3rem',
-          textAlign: 'center',
-          background: 'rgba(250, 250, 255, 0.95)'
+          textAlign: 'center'
         }}>
           <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>📚</div>
-          <h2 style={{ color: '#333', marginBottom: '0.5rem' }}>No PDFs Found</h2>
-          <p style={{ color: '#666', marginBottom: '1.5rem' }}>
+          <h2 style={{ color: 'var(--white)', marginBottom: '0.5rem' }}>No PDFs Found</h2>
+          <p style={{ color: 'var(--text-secondary)', marginBottom: '1.5rem' }}>
             There are currently no notes or PDF books available. Check back later!
           </p>
         </div>

@@ -76,12 +76,13 @@ function QuizSetup() {
   };
 
   return (
-    <div style={{ 
+    <div className="page-container" style={{ 
+      margin: '-2rem',
       minHeight: '100vh', 
       display: 'flex', 
       alignItems: 'center', 
       justifyContent: 'center',
-      backgroundColor: 'var(--midnight-velvet)',
+      backgroundColor: 'transparent',
       padding: '2rem'
     }}>
       <div className="glass-card" style={{ 

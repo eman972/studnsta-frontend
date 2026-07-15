@@ -273,10 +273,11 @@ function LiveQuizSetup() {
   }
 
   return (
-    <div style={{ 
+    <div className="page-container" style={{ 
+      margin: '-2rem',
+      padding: '3rem',
       minHeight: '100vh', 
-      backgroundColor: 'var(--midnight-velvet)',
-      padding: '2rem'
+      backgroundColor: 'transparent',
     }}>
       {/* Header */}
       <div style={{ marginBottom: '3rem', textAlign: 'center' }}>

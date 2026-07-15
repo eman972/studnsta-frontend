@@ -116,15 +116,21 @@ function AiTutor() {
   };
 
   return (
-    <div
-      style={{
-        maxWidth: "800px",
-        margin: "0 auto",
-        height: "calc(100vh - 6rem)",
-        display: "flex",
-        flexDirection: "column",
-      }}
-    >
+    <div className="page-container" style={{ 
+      margin: '-2rem',
+      padding: '3rem',
+      minHeight: '100vh', 
+      backgroundColor: 'transparent',
+    }}>
+      <div
+        style={{
+          maxWidth: "800px",
+          margin: "0 auto",
+          height: "calc(100vh - 6rem)",
+          display: "flex",
+          flexDirection: "column",
+        }}
+      >
       {/* Header */}
       <div
         style={{
@@ -437,6 +443,7 @@ function AiTutor() {
           50% { opacity: 1; }
         }
       `}</style>
+      </div>
     </div>
   );
 }

@@ -35,23 +35,23 @@ const PrivacyPolicy = () => {
   };
 
   return (
-    <div style={{
-      padding: '2rem 4rem',
-      maxWidth: '900px',
-      margin: '0 auto',
-      minHeight: '100vh',
-      backgroundColor: 'transparent'
+    <div className="page-container" style={{ 
+      margin: '-2rem',
+      padding: '3rem',
+      minHeight: '100vh', 
+      backgroundColor: 'transparent',
     }}>
-      <h1 style={{
-        textAlign: 'center',
-        marginBottom: '3rem',
-        background: 'linear-gradient(135deg, var(--rich-lavender), var(--rich-lilac))',
-        WebkitBackgroundClip: 'text',
-        WebkitTextFillColor: 'transparent',
-        fontSize: '2.5rem',
-        fontWeight: '900',
-        letterSpacing: '-0.02em'
-      }}>
+      <div style={{ maxWidth: '900px', margin: '0 auto' }}>
+        <h1 style={{
+          textAlign: 'center',
+          marginBottom: '3rem',
+          background: 'linear-gradient(135deg, var(--rich-lavender), var(--rich-lilac))',
+          WebkitBackgroundClip: 'text',
+          WebkitTextFillColor: 'transparent',
+          fontSize: '2.5rem',
+          fontWeight: '900',
+          letterSpacing: '-0.02em'
+        }}>
         Privacy And Policy
       </h1>
 
@@ -136,6 +136,7 @@ const PrivacyPolicy = () => {
         <p style={{ margin: 0, fontWeight: '600', color: 'rgba(255, 255, 255, 0.5)' }}>
           Have questions? Contact our legal team at <span style={{ color: 'var(--rich-lavender)', fontWeight: '800' }}>legal@studnsta.com</span>
         </p>
+      </div>
       </div>
     </div>
   );

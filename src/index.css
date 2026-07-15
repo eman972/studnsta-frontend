@@ -40,9 +40,9 @@
   --info-600: #2563eb;
   
   /* Dark Theme Colors */
-  --dark-bg: #0a0b1e;
-  --dark-surface: #1a1b2e;
-  --dark-surface-elevated: #2a2b3e;
+  --dark-bg: #0a0b14;
+  --dark-surface: #111226;
+  --dark-surface-elevated: #1a1c36;
   --dark-border: #374151;
   --dark-text-primary: #f8fafc;
   --dark-text-secondary: #cbd5e1;
@@ -446,6 +446,14 @@ input::placeholder, textarea::placeholder {
 .page-container {
   min-height: 100vh;
   background-color: var(--dark-bg);
+  background-image: 
+    radial-gradient(circle at 15% 50%, rgba(168, 85, 247, 0.15) 0%, transparent 50%),
+    radial-gradient(circle at 85% 30%, rgba(251, 146, 60, 0.1) 0%, transparent 50%),
+    url('./global_bg_new.png');
+  background-size: cover, cover, cover;
+  background-position: center, center, center;
+  background-attachment: fixed, fixed, fixed;
+  background-blend-mode: normal, normal, overlay;
   padding: var(--space-6);
 }
 
@@ -453,8 +461,6 @@ input::placeholder, textarea::placeholder {
 .sidebar {
   width: var(--sidebar-width);
   height: 100vh;
-  background-color: var(--glass-bg);
-  border-right: 1px solid var(--dark-border);
   position: fixed;
   left: 0;
   top: 0;
@@ -463,8 +469,14 @@ input::placeholder, textarea::placeholder {
   padding: var(--space-6);
   box-sizing: border-box;
   z-index: 1000;
-  box-shadow: var(--shadow-xl);
+  background: 
+    radial-gradient(circle at top right, rgba(251, 146, 60, 0.15) 0%, transparent 40%),
+    linear-gradient(to bottom, #161224, #0a0b1e);
+  border-right: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 10px 0 30px rgba(0, 0, 0, 0.5);
   backdrop-filter: blur(20px);
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .menu-item {
@@ -473,36 +485,38 @@ input::placeholder, textarea::placeholder {
   align-items: center;
   gap: var(--space-3);
   padding: var(--space-3) var(--space-4);
-  background-color: transparent;
-  border: 1px solid transparent;
-  border-radius: var(--radius-lg);
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
   cursor: pointer;
-  color: var(--text-secondary);
+  color: #ffffff;
   font-weight: 500;
   font-size: 0.875rem;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   text-align: left;
   position: relative;
   overflow: hidden;
+  backdrop-filter: blur(10px);
 }
 
 .menu-item:hover {
-  background-color: var(--dark-surface-elevated);
-  border-color: var(--dark-border);
+  background-color: rgba(255, 255, 255, 0.1);
+  border-color: rgba(168, 85, 247, 0.5);
   transform: translateX(4px);
+  box-shadow: 0 0 15px rgba(168, 85, 247, 0.3);
 }
 
 .menu-item.active {
-  background: linear-gradient(135deg, var(--brand-500), var(--brand-600));
-  border-color: var(--brand-500);
+  background: linear-gradient(135deg, rgba(168, 85, 247, 0.8), rgba(192, 132, 252, 0.8));
+  border-color: #c084fc;
   color: white;
-  font-weight: 600;
-  box-shadow: var(--shadow-lg), var(--shadow-glow);
+  font-weight: 700;
+  box-shadow: 0 0 20px rgba(168, 85, 247, 0.5);
   transform: scale(1.02);
 }
 
 .menu-item.active:hover {
-  transform: scale(1.02);
+  transform: scale(1.02) translateX(2px);
 }
 
 .menu-icon {
@@ -545,4 +559,12 @@ input::placeholder, textarea::placeholder {
   background-color: #dc3545;
   color: white;
   box-shadow: 0 4px 8px rgba(220, 53, 69, 0.3);
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }

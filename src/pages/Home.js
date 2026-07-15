@@ -1,141 +1,161 @@
-import { useEffect, useState } from "react";
-import { getFeed } from "../services/postService";
-import PostCard from "../components/PostCard";
-import AddPostModal from "../components/AddPostModal";
+import { useNavigate } from "react-router-dom";
 
 function Home() {
-  const [posts, setPosts] = useState([]);
-  const [showAddPost, setShowAddPost] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
-
-  const fetchFeed = async () => {
-    setIsLoading(true);
-    try {
-      const res = await getFeed();
-      const feedPosts = res.data.posts || [];
-      setPosts(feedPosts);
-    } catch (error) {
-      console.log(error);
-      setPosts([]);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchFeed();
-  }, []);
-
-  const handlePostInteraction = () => {
-    fetchFeed();
-  };
-
-  const handlePostCreated = () => {
-    fetchFeed();
-  };
-
-  const handleOpenComments = (post) => {
-    // Since we removed sidebar, comments are handled within PostCard
-    console.log('Comments handled within PostCard');
-  };
+  const navigate = useNavigate();
 
   return (
-    <div className="page-container">
-      {/* Main Content Area: Feed */}
-      <div className="flex-col gap-6">
-        {/* Header */}
-        <div className="glass-card" style={{
-          padding: '2.5rem',
-          marginBottom: '1rem'
+    <div className="page-container" style={{
+      margin: '-2rem',
+      padding: '3rem',
+      minHeight: '100vh',
+      backgroundImage: 'url(/brain_bg.jpg)',
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      backgroundAttachment: 'fixed',
+      backgroundColor: 'rgba(10, 11, 30, 0.7)',
+      backgroundBlendMode: 'overlay',
+      overflowY: 'auto'
+    }}>
+      <div className="flex-col gap-6" style={{ maxWidth: '1000px', margin: '0 auto', paddingBottom: '4rem' }}>
+        
+        {/* Eye-Catching Banner Intro */}
+        <div style={{
+          textAlign: 'center',
+          marginTop: '2rem',
+          marginBottom: '2rem',
+          animation: 'fadeIn 1s ease-out',
+          background: 'rgba(255, 255, 255, 0.03)',
+          backdropFilter: 'blur(12px)',
+          border: '1px solid rgba(255, 255, 255, 0.1)',
+          padding: '4rem 2rem',
+          borderRadius: '24px',
+          boxShadow: '0 0 40px rgba(251, 146, 60, 0.15)'
         }}>
-          <div style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
+          <h1 style={{
+            fontSize: '4.5rem',
+            fontWeight: '900',
+            lineHeight: '1.2',
+            letterSpacing: '0.02em',
+            margin: 0,
+            textShadow: '0 10px 30px rgba(0,0,0,0.5)'
           }}>
-            <div>
-              <h1 style={{ 
-                margin: 0, 
-                background: 'linear-gradient(135deg, var(--rich-lavender), var(--rich-lilac))',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                fontSize: '2.2rem', 
-                fontWeight: '900'
-              }}>
-                🌟 Community Feed
-              </h1>
-              <p style={{ margin: '0.4rem 0 0 0', color: 'var(--midnight-charcoal)', opacity: 0.7, fontSize: '1rem', fontWeight: '500' }}>
-                Join the discussion and share your thoughts
-              </p>
+            <span style={{ color: '#ffffff' }}>Practice </span>
+            <span style={{ color: '#fb923c' }}>Smarter,</span>
+            <br />
+            <span style={{ color: '#ffffff' }}>Progress </span>
+            <span style={{ color: '#fb923c' }}>Faster</span>
+          </h1>
+          <p style={{
+            fontSize: '1.5rem',
+            color: 'var(--text-secondary)',
+            marginTop: '2rem',
+            fontWeight: '500',
+            maxWidth: '700px',
+            margin: '2rem auto 0 auto',
+            lineHeight: '1.6'
+          }}>
+            Your premier academic collaboration platform. Bridge the gap between knowledge and accessibility, and master your educational curriculum.
+          </p>
+        </div>
+
+        {/* Why Choose Studnsta */}
+        <div className="glass-card" style={{ padding: '3rem', marginTop: '2rem' }}>
+          <h2 className="text-gradient-lavender" style={{ fontSize: '2.5rem', marginBottom: '2rem', textAlign: 'center' }}>
+            Why Choose Studnsta?
+          </h2>
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+            gap: '2rem'
+          }}>
+            {/* Feature 1 */}
+            <div style={{ background: 'rgba(255,255,255,0.02)', padding: '2rem', borderRadius: '20px', border: '1px solid rgba(255,255,255,0.05)' }}>
+              <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>🤝</div>
+              <h3 style={{ color: 'white', marginBottom: '1rem' }}>Community Driven</h3>
+              <p style={{ color: 'var(--text-muted)' }}>Join a vibrant community of students and educators. Discuss, share, and solve complex problems together.</p>
             </div>
-            <button
-              onClick={() => setShowAddPost(true)}
-              className="glow-button"
-              style={{
-                padding: '0.8rem 1.5rem',
-                fontSize: '1rem',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.5rem'
-              }}
-            >
-              <span>➕</span> Create Post
-            </button>
+            {/* Feature 2 */}
+            <div style={{ background: 'rgba(255,255,255,0.02)', padding: '2rem', borderRadius: '20px', border: '1px solid rgba(255,255,255,0.05)' }}>
+              <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>🤖</div>
+              <h3 style={{ color: 'white', marginBottom: '1rem' }}>AI Powered Learning</h3>
+              <p style={{ color: 'var(--text-muted)' }}>Get stuck? Our AI Tutor is available 24/7 to provide personalized explanations and guide your learning journey.</p>
+            </div>
+            {/* Feature 3 */}
+            <div style={{ background: 'rgba(255,255,255,0.02)', padding: '2rem', borderRadius: '20px', border: '1px solid rgba(255,255,255,0.05)' }}>
+              <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>📊</div>
+              <h3 style={{ color: 'white', marginBottom: '1rem' }}>Track Your Progress</h3>
+              <p style={{ color: 'var(--text-muted)' }}>Visualize your mastery with advanced analytics, test history, and intelligent performance tracking.</p>
+            </div>
+            {/* Feature 4 */}
+            <div style={{ background: 'rgba(255,255,255,0.02)', padding: '2rem', borderRadius: '20px', border: '1px solid rgba(255,255,255,0.05)' }}>
+              <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>📚</div>
+              <h3 style={{ color: 'white', marginBottom: '1rem' }}>Comprehensive Resources</h3>
+              <p style={{ color: 'var(--text-muted)' }}>Access a vast, organized library of peer-reviewed study notes and high-quality PDF materials.</p>
+            </div>
+            {/* Feature 5 */}
+            <div style={{ background: 'rgba(255,255,255,0.02)', padding: '2rem', borderRadius: '20px', border: '1px solid rgba(255,255,255,0.05)' }}>
+              <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>⚡</div>
+              <h3 style={{ color: 'white', marginBottom: '1rem' }}>Live Interaction</h3>
+              <p style={{ color: 'var(--text-muted)' }}>Participate in live, interactive quiz sessions hosted by verified teachers to test your knowledge.</p>
+            </div>
+            {/* Feature 6 */}
+            <div style={{ background: 'rgba(255,255,255,0.02)', padding: '2rem', borderRadius: '20px', border: '1px solid rgba(255,255,255,0.05)' }}>
+              <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>🎯</div>
+              <h3 style={{ color: 'white', marginBottom: '1rem' }}>Gamified Experience</h3>
+              <p style={{ color: 'var(--text-muted)' }}>Turn learning into an engaging journey with interactive challenges and immediate feedback.</p>
+            </div>
           </div>
         </div>
-          {/* Loading State */}
-          {isLoading && (
-            <div className="text-center" style={{ padding: '5rem' }}>
-              <div className="flex-col items-center gap-6" style={{ 
-                fontSize: '1.2rem', 
-                color: 'var(--rich-lilac)', 
-                fontWeight: '700'
-              }}>
-                <div style={{ fontSize: '3rem', animation: 'pulse 1.5s infinite' }}>⏳</div>
-                Gathering amazing notes for you...
-              </div>
-            </div>
-          )}
 
-          {/* Empty State */}
-          {!isLoading && posts.length === 0 && (
-            <div className="glass-card text-center" style={{
-              padding: '5rem 2rem'
-            }}>
-              <div style={{ fontSize: '6rem', marginBottom: '2.5rem' }}>📝</div>
-              <h2 className="text-gradient-lavender" style={{ marginBottom: '1.2rem', fontWeight: '900', fontSize: '2.5rem' }}>Ignite the Discourse</h2>
-              <p style={{ color: 'var(--text-muted)', marginBottom: '3rem', lineHeight: '1.8', maxWidth: '480px', margin: '0 auto 3rem', fontSize: '1.15rem', fontWeight: '600' }}>
-                No questions yet in this subject. Be the first to ask something!
-              </p>
-              <button
-                onClick={() => setShowAddPost(true)}
-                className="glow-button"
-                style={{ padding: '0.6rem 1.5rem', fontSize: '0.9rem' }}
-              >
-                Create Your First Post
-              </button>
-            </div>
-          )}
+        {/* Advantages & Features */}
+        <div className="glass-card" style={{ padding: '3rem', marginTop: '1rem' }}>
+          <h2 className="text-gradient-lavender" style={{ fontSize: '2.5rem', marginBottom: '2rem', textAlign: 'center' }}>
+            Unfair Advantages
+          </h2>
+          <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+            <li style={{ display: 'flex', alignItems: 'center', gap: '1rem', fontSize: '1.2rem', color: 'var(--text-secondary)' }}>
+              <span style={{ background: 'rgba(168, 85, 247, 0.2)', padding: '0.5rem', borderRadius: '50%' }}>✨</span> 
+              Access to hundreds of organized study notes and PDFs.
+            </li>
+            <li style={{ display: 'flex', alignItems: 'center', gap: '1rem', fontSize: '1.2rem', color: 'var(--text-secondary)' }}>
+              <span style={{ background: 'rgba(168, 85, 247, 0.2)', padding: '0.5rem', borderRadius: '50%' }}>⚡</span> 
+              Live multiplayer quizzes managed by verified teachers.
+            </li>
+            <li style={{ display: 'flex', alignItems: 'center', gap: '1rem', fontSize: '1.2rem', color: 'var(--text-secondary)' }}>
+              <span style={{ background: 'rgba(168, 85, 247, 0.2)', padding: '0.5rem', borderRadius: '50%' }}>🎯</span> 
+              Instant feedback and detailed explanations for every practice question.
+            </li>
+            <li style={{ display: 'flex', alignItems: 'center', gap: '1rem', fontSize: '1.2rem', color: 'var(--text-secondary)' }}>
+              <span style={{ background: 'rgba(168, 85, 247, 0.2)', padding: '0.5rem', borderRadius: '50%' }}>🛡️</span> 
+              Safe, moderated environment strictly focused on academics.
+            </li>
+          </ul>
+        </div>
 
-          {/* Posts Feed */}
-          {!isLoading && posts.map((post) => (
-            <PostCard 
-              key={post._id} 
-              post={post} 
-              onInteraction={handlePostInteraction}
-              onOpenComments={handleOpenComments}
-              isActive={false}
-            />
-          ))}
+        {/* Call to Action */}
+        <div style={{ textAlign: 'center', marginTop: '4rem', marginBottom: '2rem' }}>
+          <button 
+            onClick={() => navigate('/quiz-setup')}
+            className="glow-button"
+            style={{
+              padding: '1.5rem 4rem',
+              fontSize: '1.5rem',
+              borderRadius: '50px',
+              fontWeight: '800',
+              textTransform: 'uppercase',
+              letterSpacing: '0.1em',
+              background: 'linear-gradient(135deg, var(--brand-500), var(--brand-600))',
+              boxShadow: '0 15px 35px rgba(139, 92, 246, 0.4)',
+              transition: 'transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275)'
+            }}
+            onMouseOver={(e) => e.currentTarget.style.transform = 'scale(1.05)'}
+            onMouseOut={(e) => e.currentTarget.style.transform = 'scale(1)'}
+          >
+            START LEARNING
+          </button>
+        </div>
+
       </div>
-
-      {/* Add Post Modal */}
-      {showAddPost && (
-        <AddPostModal
-          onClose={() => setShowAddPost(false)}
-          onPostCreated={handlePostCreated}
-        />
-      )}
     </div>
   );
 }
