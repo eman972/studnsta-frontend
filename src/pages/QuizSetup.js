@@ -149,9 +149,9 @@ function QuizSetup() {
               onFocus={(e) => e.target.style.borderColor = 'var(--rich-lilac)'}
               onBlur={(e) => e.target.style.borderColor = 'var(--border-color)'}
             >
-              <option value="" style={{ backgroundColor: 'var(--midnight-velvet)' }}>Select Subject</option>
+              <option value="">Select Subject</option>
               {subjects.map(subject => (
-                <option key={subject} value={subject} style={{ backgroundColor: 'var(--midnight-velvet)' }}>
+                <option key={subject} value={subject}>
                   {subject}
                 </option>
               ))}
@@ -191,11 +191,11 @@ function QuizSetup() {
               onFocus={(e) => e.target.style.borderColor = 'var(--rich-lilac)'}
               onBlur={(e) => e.target.style.borderColor = 'var(--border-color)'}
             >
-              <option value="" style={{ backgroundColor: 'var(--midnight-velvet)' }}>
+              <option value="">
                 {isLoadingTopics ? 'Loading topics...' : 'Select Topic'}
               </option>
               {topics.map(topic => (
-                <option key={topic} value={topic} style={{ backgroundColor: 'var(--midnight-velvet)' }}>
+                <option key={topic} value={topic}>
                   {topic}
                 </option>
               ))}

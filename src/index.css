@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
 
 :root {
   /* Modern Color Palette */
@@ -105,6 +106,62 @@
   --text-secondary: var(--dark-text-secondary);
   --text-muted: var(--dark-text-muted);
   --text-inverse: var(--dark-bg);
+}
+
+body.light-mode {
+  --dark-bg: #f9f8fc;
+  --dark-surface: #ffffff;
+  --dark-surface-elevated: #f3f0f8;
+  --dark-border: #e8e4f2;
+  --dark-text-primary: #0a0b14; /* Darkest color from the palette */
+  --text-primary: #0a0b14;
+  --dark-text-secondary: #334155;
+  --text-secondary: #334155;
+  --dark-text-muted: #64748b;
+  --text-muted: #64748b;
+  
+  --pure-pearl: #0a0b14;
+  --off-white: #0a0b1e;
+  
+  --glass-bg: rgba(255, 255, 255, 0.9);
+  --glass-border: rgba(168, 85, 247, 0.2);
+  --glass-shadow: 0 8px 32px 0 rgba(168, 85, 247, 0.08);
+}
+
+body.light-mode::before {
+  background: 
+    radial-gradient(circle at 20% 30%, rgba(168, 85, 247, 0.05) 0%, transparent 40%),
+    radial-gradient(circle at 80% 70%, rgba(192, 132, 252, 0.05) 0%, transparent 40%),
+    linear-gradient(135deg, #f9f8fc 0%, #f0ebf5 100%);
+}
+
+body.light-mode .page-container,
+body.light-mode .auth-container,
+body.light-mode .glass-card {
+  background-color: var(--dark-bg) !important;
+  background-image: none !important;
+  color: var(--dark-text-primary) !important;
+}
+
+body.light-mode .sidebar {
+  background: 
+    radial-gradient(circle at top right, rgba(168, 85, 247, 0.05) 0%, transparent 40%),
+    linear-gradient(to bottom, #ffffff, #f9f8fc) !important;
+  border-right: 1px solid var(--dark-border);
+}
+
+body.light-mode .menu-item:hover:not(.active) {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+/* Force specific headers and inline styles that are hardcoded to white to become off-purple in light mode */
+body.light-mode h1, 
+body.light-mode h2, 
+body.light-mode h3, 
+body.light-mode div, 
+body.light-mode span, 
+body.light-mode p {
+  text-shadow: none !important;
 }
 
 * {
@@ -295,6 +352,11 @@ input:focus, textarea:focus, select:focus {
 
 input::placeholder, textarea::placeholder {
   color: var(--text-muted);
+}
+
+select option {
+  background-color: var(--dark-surface);
+  color: var(--text-primary);
 }
 
 /* Scrollbar Styling */
@@ -489,7 +551,7 @@ input::placeholder, textarea::placeholder {
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 20px;
   cursor: pointer;
-  color: #ffffff;
+  color: var(--text-primary);
   font-weight: 500;
   font-size: 0.875rem;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);

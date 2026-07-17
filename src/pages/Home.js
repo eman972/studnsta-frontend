@@ -26,33 +26,47 @@ function Home() {
           animation: 'fadeIn 1s ease-out',
           background: 'rgba(255, 255, 255, 0.03)',
           backdropFilter: 'blur(12px)',
-          border: '1px solid rgba(255, 255, 255, 0.1)',
+          border: '1px solid rgba(168, 85, 247, 0.4)',
           padding: '4rem 2rem',
           borderRadius: '24px',
-          boxShadow: '0 0 40px rgba(251, 146, 60, 0.15)'
+          boxShadow: '0 0 30px rgba(168, 85, 247, 0.3), inset 0 0 20px rgba(168, 85, 247, 0.1)'
         }}>
+          <div style={{ marginBottom: '1.5rem', display: 'flex' }}>
+            <img 
+              src="/grad_cap.png" 
+              alt="Graduation Cap" 
+              style={{ 
+                width: '80px', 
+                height: '80px', 
+                objectFit: 'contain', 
+                mixBlendMode: 'screen',
+                filter: 'drop-shadow(0 10px 20px rgba(251, 146, 60, 0.3))'
+              }} 
+            />
+          </div>
           <h1 style={{
             fontSize: '4.5rem',
             fontWeight: '900',
             lineHeight: '1.2',
             letterSpacing: '0.02em',
-            margin: 0,
-            textShadow: '0 10px 30px rgba(0,0,0,0.5)'
+            margin: 0
           }}>
-            <span style={{ color: '#ffffff' }}>Practice </span>
-            <span style={{ color: '#fb923c' }}>Smarter,</span>
+            <span style={{ color: 'var(--text-primary)' }}>Practice </span>
+            <span style={{ color: 'var(--brand-500)' }}>Smarter,</span>
             <br />
-            <span style={{ color: '#ffffff' }}>Progress </span>
-            <span style={{ color: '#fb923c' }}>Faster</span>
+            <span style={{ color: 'var(--text-primary)' }}>Progress </span>
+            <span style={{ color: 'var(--brand-500)' }}>Faster</span>
           </h1>
           <p style={{
-            fontSize: '1.5rem',
+            fontFamily: "'Outfit', sans-serif",
+            fontSize: '1.6rem',
             color: 'var(--text-secondary)',
             marginTop: '2rem',
-            fontWeight: '500',
+            fontWeight: '300',
             maxWidth: '700px',
             margin: '2rem auto 0 auto',
-            lineHeight: '1.6'
+            lineHeight: '1.8',
+            letterSpacing: '0.03em'
           }}>
             Your premier academic collaboration platform. Bridge the gap between knowledge and accessibility, and master your educational curriculum.
           </p>
@@ -71,37 +85,37 @@ function Home() {
             {/* Feature 1 */}
             <div style={{ background: 'rgba(255,255,255,0.02)', padding: '2rem', borderRadius: '20px', border: '1px solid rgba(255,255,255,0.05)' }}>
               <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>🤝</div>
-              <h3 style={{ color: 'white', marginBottom: '1rem' }}>Community Driven</h3>
+              <h3 style={{ color: 'var(--text-primary)', marginBottom: '1rem' }}>Community Driven</h3>
               <p style={{ color: 'var(--text-muted)' }}>Join a vibrant community of students and educators. Discuss, share, and solve complex problems together.</p>
             </div>
             {/* Feature 2 */}
             <div style={{ background: 'rgba(255,255,255,0.02)', padding: '2rem', borderRadius: '20px', border: '1px solid rgba(255,255,255,0.05)' }}>
               <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>🤖</div>
-              <h3 style={{ color: 'white', marginBottom: '1rem' }}>AI Powered Learning</h3>
+              <h3 style={{ color: 'var(--text-primary)', marginBottom: '1rem' }}>AI Powered Learning</h3>
               <p style={{ color: 'var(--text-muted)' }}>Get stuck? Our AI Tutor is available 24/7 to provide personalized explanations and guide your learning journey.</p>
             </div>
             {/* Feature 3 */}
             <div style={{ background: 'rgba(255,255,255,0.02)', padding: '2rem', borderRadius: '20px', border: '1px solid rgba(255,255,255,0.05)' }}>
               <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>📊</div>
-              <h3 style={{ color: 'white', marginBottom: '1rem' }}>Track Your Progress</h3>
+              <h3 style={{ color: 'var(--text-primary)', marginBottom: '1rem' }}>Track Your Progress</h3>
               <p style={{ color: 'var(--text-muted)' }}>Visualize your mastery with advanced analytics, test history, and intelligent performance tracking.</p>
             </div>
             {/* Feature 4 */}
             <div style={{ background: 'rgba(255,255,255,0.02)', padding: '2rem', borderRadius: '20px', border: '1px solid rgba(255,255,255,0.05)' }}>
               <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>📚</div>
-              <h3 style={{ color: 'white', marginBottom: '1rem' }}>Comprehensive Resources</h3>
+              <h3 style={{ color: 'var(--text-primary)', marginBottom: '1rem' }}>Comprehensive Resources</h3>
               <p style={{ color: 'var(--text-muted)' }}>Access a vast, organized library of peer-reviewed study notes and high-quality PDF materials.</p>
             </div>
             {/* Feature 5 */}
             <div style={{ background: 'rgba(255,255,255,0.02)', padding: '2rem', borderRadius: '20px', border: '1px solid rgba(255,255,255,0.05)' }}>
               <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>⚡</div>
-              <h3 style={{ color: 'white', marginBottom: '1rem' }}>Live Interaction</h3>
+              <h3 style={{ color: 'var(--text-primary)', marginBottom: '1rem' }}>Live Interaction</h3>
               <p style={{ color: 'var(--text-muted)' }}>Participate in live, interactive quiz sessions hosted by verified teachers to test your knowledge.</p>
             </div>
             {/* Feature 6 */}
             <div style={{ background: 'rgba(255,255,255,0.02)', padding: '2rem', borderRadius: '20px', border: '1px solid rgba(255,255,255,0.05)' }}>
               <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>🎯</div>
-              <h3 style={{ color: 'white', marginBottom: '1rem' }}>Gamified Experience</h3>
+              <h3 style={{ color: 'var(--text-primary)', marginBottom: '1rem' }}>Gamified Experience</h3>
               <p style={{ color: 'var(--text-muted)' }}>Turn learning into an engaging journey with interactive challenges and immediate feedback.</p>
             </div>
           </div>

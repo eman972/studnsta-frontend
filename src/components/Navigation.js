@@ -7,6 +7,22 @@ function Navigation() {
   const [user] = useState(JSON.parse(localStorage.getItem("user") || "{}"));
   const userRole = localStorage.getItem("userRole");
   const [isAboutOpen, setIsAboutOpen] = useState(false);
+  
+  const [isLightMode, setIsLightMode] = useState(() => {
+    return document.body.classList.contains('light-mode');
+  });
+
+  const toggleTheme = () => {
+    setIsLightMode(prev => {
+      const next = !prev;
+      if (next) {
+        document.body.classList.add('light-mode');
+      } else {
+        document.body.classList.remove('light-mode');
+      }
+      return next;
+    });
+  };
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -73,21 +89,17 @@ function Navigation() {
             width: "65px",
             height: "65px",
             marginBottom: "var(--space-3)",
-            borderRadius: "50%",
-            overflow: "hidden",
             display: "flex",
             alignItems: "center",
             justifyContent: "center",
-            boxShadow: "0 0 15px rgba(168, 85, 247, 0.3)",
           }}>
             <img
               src="/grad_cap.png"
               alt="Studnsta Logo"
               style={{
-                width: "75%", 
-                height: "75%",
-                objectFit: "cover",
-                objectPosition: "50% 50%",
+                width: "100%", 
+                height: "100%",
+                objectFit: "contain",
                 mixBlendMode: "screen",
               }}
             />
@@ -201,12 +213,12 @@ function Navigation() {
             >
               {!user.avatar && (user.name?.charAt(0).toUpperCase() || "U")}
             </div>
-            <div style={{ overflow: "hidden" }}>
+            <div style={{ overflow: "hidden", flex: 1 }}>
               <div
                 style={{
                   fontWeight: "800",
                   fontSize: "1rem",
-                  color: "var(--pure-pearl)",
+                  color: "var(--text-primary)",
                   whiteSpace: "nowrap",
                   textOverflow: "ellipsis",
                 }}
@@ -226,6 +238,28 @@ function Navigation() {
                 {user.role || "Guest"}
               </div>
             </div>
+            
+            <button
+              onClick={toggleTheme}
+              title={isLightMode ? "Switch to Dark Mode" : "Switch to Light Mode"}
+              style={{
+                background: 'transparent',
+                border: 'none',
+                color: 'var(--text-primary)',
+                cursor: 'pointer',
+                fontSize: '1.2rem',
+                padding: '0.5rem',
+                borderRadius: '50%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                transition: 'background 0.3s'
+              }}
+              onMouseOver={(e) => e.currentTarget.style.background = 'rgba(168, 85, 247, 0.1)'}
+              onMouseOut={(e) => e.currentTarget.style.background = 'transparent'}
+            >
+              {isLightMode ? '🌙' : '☀️'}
+            </button>
           </div>
           
           <button 
