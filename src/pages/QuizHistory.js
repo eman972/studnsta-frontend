@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { getQuizHistory } from "../services/quizApiService";
+import { getQuizHistory, getSubjects, getTopicsBySubject } from "../services/quizApiService";
 import { getGradeFromScore, formatQuizTime } from "../services/quizApiService";
+import SkeletonLoader from "../components/SkeletonLoader";
 
 function QuizHistory() {
   const navigate = useNavigate();
@@ -14,10 +15,49 @@ function QuizHistory() {
     subject: '',
     topic: ''
   });
+  const [subjects, setSubjects] = useState([]);
+  const [topics, setTopics] = useState([]);
+
+  useEffect(() => {
+    fetchAvailableSubjects();
+  }, []);
 
   useEffect(() => {
     fetchQuizHistory();
-  }, [currentPage, filters]);
+  }, [currentPage, filters.subject, filters.topic]);
+
+  useEffect(() => {
+    if (filters.subject) {
+      fetchTopics(filters.subject);
+    } else {
+      setTopics([]);
+      if (filters.topic) {
+        handleFilterChange('topic', '');
+      }
+    }
+  }, [filters.subject]);
+
+  const fetchAvailableSubjects = async () => {
+    try {
+      const res = await getSubjects();
+      if (res && res.success) {
+        setSubjects(res.subjects);
+      }
+    } catch (error) {
+      console.error("Error fetching subjects:", error);
+    }
+  };
+
+  const fetchTopics = async (subject) => {
+    try {
+      const res = await getTopicsBySubject(subject);
+      if (res && res.success) {
+        setTopics(res.topics);
+      }
+    } catch (error) {
+      console.error("Error fetching topics:", error);
+    }
+  };
 
   const fetchQuizHistory = async () => {
     setIsLoading(true);
@@ -63,15 +103,19 @@ function QuizHistory() {
 
   if (isLoading) {
     return (
-      <div style={{ 
-        minHeight: '100vh', 
-        display: 'flex', 
-        alignItems: 'center', 
-        justifyContent: 'center',
-        backgroundColor: 'var(--midnight-velvet)'
-      }}>
-        <div style={{ textAlign: 'center', color: 'var(--pure-pearl)' }}>
-          <div style={{ fontSize: '2rem', marginBottom: '1rem' }}>Loading Quiz History...</div>
+      <div className="page-container" style={{ margin: '-2rem', padding: '3rem', minHeight: '100vh' }}>
+        <div style={{ marginBottom: '3rem', textAlign: 'center' }}>
+          <SkeletonLoader height="3rem" width="300px" style={{ margin: '0 auto 1rem' }} />
+          <SkeletonLoader height="1.5rem" width="200px" style={{ margin: '0 auto' }} />
+        </div>
+        <div className="glass-card" style={{ padding: '2rem', marginBottom: '2rem' }}>
+          <SkeletonLoader height="2rem" width="250px" style={{ marginBottom: '1.5rem' }} />
+          <div style={{ display: 'flex', gap: '1.5rem' }}>
+            <SkeletonLoader height="4rem" width="100px" count={4} inline style={{ flex: 1 }} />
+          </div>
+        </div>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+          <SkeletonLoader height="100px" count={3} />
         </div>
       </div>
     );
@@ -226,11 +270,9 @@ function QuizHistory() {
               }}
             >
               <option value="">All Subjects</option>
-              <option value="Math">Mathematics</option>
-              <option value="Physics">Physics</option>
-              <option value="Chemistry">Chemistry</option>
-              <option value="Biology">Biology</option>
-              <option value="Computer">Computer Science</option>
+              {subjects.map(subject => (
+                <option key={subject} value={subject}>{subject}</option>
+              ))}
             </select>
           </div>
           
@@ -244,11 +286,10 @@ function QuizHistory() {
             }}>
               Topic
             </label>
-            <input
-              type="text"
+            <select
               value={filters.topic}
               onChange={(e) => handleFilterChange('topic', e.target.value)}
-              placeholder="Filter by topic..."
+              disabled={!filters.subject}
               style={{
                 width: '100%',
                 padding: '0.8rem',
@@ -258,9 +299,15 @@ function QuizHistory() {
                 outline: 'none',
                 backgroundColor: 'rgba(255, 255, 255, 0.05)',
                 color: 'var(--pure-pearl)',
-                boxSizing: 'border-box'
+                cursor: !filters.subject ? 'not-allowed' : 'pointer',
+                opacity: !filters.subject ? 0.5 : 1
               }}
-            />
+            >
+              <option value="">{filters.subject ? "All Topics" : "Select a subject first"}</option>
+              {topics.map(topic => (
+                <option key={topic} value={topic}>{topic}</option>
+              ))}
+            </select>
           </div>
           
           <button

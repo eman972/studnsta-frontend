@@ -195,15 +195,13 @@ const Footer = () => {
             letterSpacing: '0.05em'
           }}>
             <div style={{
-              width: "40px",
-              height: "40px",
-              borderRadius: "50%",
-              overflow: "hidden",
+              width: "50px",
+              height: "50px",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
             }}>
-              <img src="/grad_cap.png" alt="Logo" style={{ width: "75%", height: "75%", objectFit: "cover", objectPosition: "50% 50%", mixBlendMode: "screen" }} />
+              <img src="/logo_neon_transparent.png" alt="Logo" style={{ width: "100%", height: "100%", objectFit: "contain" }} />
             </div> STUDNSTA
           </div>
           <p style={{ color: 'rgba(250, 250, 255, 0.6)', fontSize: '1rem', maxWidth: '320px', lineHeight: '1.7', fontWeight: '500' }}>

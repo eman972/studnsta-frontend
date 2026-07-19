@@ -18,11 +18,10 @@ function AddPostModal({ onClose, onPostCreated }) {
     setIsLoading(true);
     
     try {
-      const postFormData = new FormData();
-      postFormData.append("content", formData.content);
-      postFormData.append("subject", formData.subject);
-
-      await createPost(postFormData);
+      await createPost({
+        content: formData.content,
+        subject: formData.subject
+      });
       onPostCreated();
       onClose();
     } catch (error) {

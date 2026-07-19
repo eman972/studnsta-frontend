@@ -106,6 +106,9 @@
   --text-secondary: var(--dark-text-secondary);
   --text-muted: var(--dark-text-muted);
   --text-inverse: var(--dark-bg);
+  
+  --skeleton-base: rgba(255, 255, 255, 0.03);
+  --skeleton-highlight: rgba(255, 255, 255, 0.08);
 }
 
 body.light-mode {
@@ -126,6 +129,9 @@ body.light-mode {
   --glass-bg: rgba(255, 255, 255, 0.9);
   --glass-border: rgba(168, 85, 247, 0.2);
   --glass-shadow: 0 8px 32px 0 rgba(168, 85, 247, 0.08);
+  
+  --skeleton-base: rgba(0, 0, 0, 0.05);
+  --skeleton-highlight: rgba(0, 0, 0, 0.1);
 }
 
 body.light-mode::before {
@@ -630,3 +636,25 @@ select option {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
+/* Skeleton Loader Styles */
+.skeleton-loader {
+  background: linear-gradient(
+    90deg, 
+    var(--skeleton-base) 25%, 
+    var(--skeleton-highlight) 50%, 
+    var(--skeleton-base) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite linear;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+

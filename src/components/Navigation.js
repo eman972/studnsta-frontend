@@ -1,5 +1,6 @@
 import { useNavigate, useLocation } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import api from "../services/api";
 
 function Navigation() {
   const navigate = useNavigate();
@@ -7,10 +8,28 @@ function Navigation() {
   const [user] = useState(JSON.parse(localStorage.getItem("user") || "{}"));
   const userRole = localStorage.getItem("userRole");
   const [isAboutOpen, setIsAboutOpen] = useState(false);
+  const [liveStreak, setLiveStreak] = useState(user?.dailyStreak || 0);
   
   const [isLightMode, setIsLightMode] = useState(() => {
     return document.body.classList.contains('light-mode');
   });
+
+  useEffect(() => {
+    const fetchMe = async () => {
+      try {
+        const res = await api.get('/api/auth/me');
+        if (res.data) {
+          setLiveStreak(res.data.dailyStreak || 0);
+          // Also update local storage so it's fresh
+          const updatedUser = { ...user, ...res.data };
+          localStorage.setItem("user", JSON.stringify(updatedUser));
+        }
+      } catch (error) {
+        console.error("Failed to fetch user data", error);
+      }
+    };
+    fetchMe();
+  }, []);
 
   const toggleTheme = () => {
     setIsLightMode(prev => {
@@ -36,6 +55,7 @@ function Navigation() {
     { name: "Study Notes", path: "/notes", icon: "Notes" },
     { name: "My Progress", path: "/progress", icon: "Analytics" },
     { name: "Practice Quiz", path: "/quiz-setup", icon: "Quiz" },
+    { name: "Leaderboard", path: "/leaderboard", icon: "Trophy" },
     { name: "AI Tutor", path: "/ai-tutor", icon: "AI" },
     { name: "Create Quiz", path: "/live-quiz-setup", icon: "Create" },
     { name: "Profile", path: "/profile", icon: "Person" },
@@ -58,6 +78,7 @@ function Navigation() {
       Notes: "📚",
       Analytics: "📈",
       Quiz: "📝",
+      Trophy: "🏆",
       AI: "🤖",
       Create: "➕",
       Person: "👤",
@@ -94,13 +115,12 @@ function Navigation() {
             justifyContent: "center",
           }}>
             <img
-              src="/grad_cap.png"
+              src="/logo_neon_transparent.png"
               alt="Studnsta Logo"
               style={{
                 width: "100%", 
                 height: "100%",
                 objectFit: "contain",
-                mixBlendMode: "screen",
               }}
             />
           </div>
@@ -239,6 +259,36 @@ function Navigation() {
               </div>
             </div>
             
+            <div
+              title={`${liveStreak} Day Streak`}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "0.2rem",
+                background: "rgba(255, 140, 0, 0.15)",
+                padding: "0.4rem 0.6rem",
+                borderRadius: "20px",
+                color: "#ff9800",
+                fontWeight: "800",
+                fontSize: "0.9rem",
+                border: "1px solid rgba(255, 152, 0, 0.3)",
+                boxShadow: liveStreak > 0 ? "0 0 10px rgba(255, 152, 0, 0.2)" : "none",
+                cursor: "pointer",
+                transition: "all 0.3s ease",
+              }}
+              onMouseOver={(e) => {
+                e.currentTarget.style.transform = "scale(1.05)";
+                e.currentTarget.style.boxShadow = "0 0 15px rgba(255, 152, 0, 0.4)";
+              }}
+              onMouseOut={(e) => {
+                e.currentTarget.style.transform = "scale(1)";
+                e.currentTarget.style.boxShadow = liveStreak > 0 ? "0 0 10px rgba(255, 152, 0, 0.2)" : "none";
+              }}
+            >
+              <span style={{ fontSize: "1.1rem" }}>🔥</span>
+              <span>{liveStreak}</span>
+            </div>
+            
             <button
               onClick={toggleTheme}
               title={isLightMode ? "Switch to Dark Mode" : "Switch to Light Mode"}
@@ -347,9 +397,9 @@ function Navigation() {
             >
               ✕
             </button>
-
-            <div style={{ fontSize: "4rem", marginBottom: "1.5rem" }}>🎓</div>
-
+            <div style={{ marginBottom: "1.5rem", display: "flex", justifyContent: "center" }}>
+              <img src="/logo_neon_transparent.png" alt="Studnsta" style={{ width: "100px", height: "100px", objectFit: "contain", filter: 'drop-shadow(0 10px 20px rgba(168, 85, 247, 0.4))' }} />
+            </div>
             <h2
               style={{
                 fontSize: "2.5rem",

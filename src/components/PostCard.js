@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { likePost, commentOnPost, savePost } from "../services/postService";
+import { BASE_URL } from "../services/api";
 
 function PostCard({ post, onInteraction, onOpenComments, isActive }) {
   const [isLiking, setIsLiking] = useState(false);
@@ -87,7 +88,7 @@ function PostCard({ post, onInteraction, onOpenComments, isActive }) {
             borderRadius: '50%',
             border: '2px solid #a855f7',
             backgroundColor: post.author.avatar ? 'transparent' : 'var(--rich-lavender)',
-            backgroundImage: post.author.avatar ? `url(http://localhost:5000${post.author.avatar})` : 'linear-gradient(135deg, var(--rich-lavender), var(--rich-lilac))',
+            backgroundImage: post.author.avatar ? `url(${BASE_URL}${post.author.avatar})` : 'linear-gradient(135deg, var(--rich-lavender), var(--rich-lilac))',
             backgroundSize: 'cover',
             backgroundPosition: 'center',
             display: 'flex',
@@ -114,7 +115,7 @@ function PostCard({ post, onInteraction, onOpenComments, isActive }) {
       {post.image && (
         <div style={{ width: '100%', maxHeight: '500px', overflow: 'hidden', backgroundColor: 'var(--bg-light)' }}>
           <img 
-            src={`http://localhost:5000${post.image}`}
+            src={`${BASE_URL}${post.image}`}
             alt="Post Content"
             style={{ width: '100%', height: 'auto', display: 'block' }}
           />
@@ -181,7 +182,7 @@ function PostCard({ post, onInteraction, onOpenComments, isActive }) {
                       height: '32px',
                       borderRadius: '10px',
                       backgroundColor: comment.user?.avatar ? 'transparent' : 'var(--rich-lilac)',
-                      backgroundImage: comment.user?.avatar ? `url(http://localhost:5000${comment.user.avatar})` : 'none',
+                      backgroundImage: comment.user?.avatar ? `url(${BASE_URL}${comment.user.avatar})` : 'none',
                       backgroundSize: 'cover',
                       backgroundPosition: 'center',
                       display: 'flex',

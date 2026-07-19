@@ -18,6 +18,32 @@ function LiveQuizPage() {
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [quizStarted, setQuizStarted] = useState(false);
   const timerRef = useRef(null);
+  const submitRef = useRef();
+
+  // Keep the latest submit function in a ref for the event listener
+  useEffect(() => {
+    submitRef.current = handleSubmitQuiz;
+  });
+
+  // Anti-Cheat: Auto-submit on tab switch or window minimize
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.hidden && quizStarted && !isSubmitting && timeLeft > 0) {
+        alert("Anti-Cheat System: You switched tabs or minimized the window. Your quiz has been submitted automatically to prevent cheating.");
+        if (submitRef.current) {
+          submitRef.current();
+        }
+      }
+    };
+
+    if (quizStarted) {
+      document.addEventListener("visibilitychange", handleVisibilityChange);
+    }
+
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
+  }, [quizStarted, isSubmitting, timeLeft]);
 
   useEffect(() => {
     fetchQuizData();
@@ -135,7 +161,8 @@ function LiveQuizPage() {
       }
     } catch (error) {
       console.error("Error submitting quiz:", error);
-      alert("Failed to submit quiz results");
+      const msg = error.response?.data?.message || error.message;
+      alert(`Failed to submit quiz results: ${msg}`);
     } finally {
       setIsSubmitting(false);
     }

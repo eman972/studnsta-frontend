@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { getFeed } from "../services/postService";
 import PostCard from "../components/PostCard";
 import AddPostModal from "../components/AddPostModal";
+import SkeletonLoader from "../components/SkeletonLoader";
 
 function Connect() {
   const [posts, setPosts] = useState([]);
@@ -101,14 +102,14 @@ function Connect() {
         </div>
           {/* Loading State */}
           {isLoading && (
-            <div className="text-center" style={{ padding: '5rem' }}>
-              <div className="flex-col items-center gap-6" style={{ 
-                fontSize: '1.2rem', 
-                color: 'var(--rich-lilac)', 
-                fontWeight: '700'
-              }}>
-                <div style={{ fontSize: '3rem', animation: 'pulse 1.5s infinite' }}>⏳</div>
-                Gathering amazing notes for you...
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', marginTop: '1rem' }}>
+              <div className="glass-card" style={{ padding: '2rem' }}>
+                <SkeletonLoader height="3rem" width="200px" style={{ marginBottom: '1rem' }} />
+                <SkeletonLoader height="1rem" count={3} />
+              </div>
+              <div className="glass-card" style={{ padding: '2rem' }}>
+                <SkeletonLoader height="3rem" width="200px" style={{ marginBottom: '1rem' }} />
+                <SkeletonLoader height="1rem" count={2} />
               </div>
             </div>
           )}

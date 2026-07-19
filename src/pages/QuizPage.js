@@ -289,7 +289,17 @@ function QuizPage() {
       let correctAnswers = 0;
       const answers = questions.map((question, index) => {
         const userAnswer = userAnswers[index];
-        const isCorrect = userAnswer === question.correctAnswer;
+        
+        let isCorrect = false;
+        if (question.correctAnswer !== undefined) {
+          if (typeof question.correctAnswer === 'number' || (typeof question.correctAnswer === 'string' && !isNaN(question.correctAnswer) && question.correctAnswer.length < 3)) {
+            const correctIndex = parseInt(question.correctAnswer);
+            isCorrect = userAnswer === question.options[correctIndex];
+          } else {
+            isCorrect = userAnswer === question.correctAnswer;
+          }
+        }
+
         if (isCorrect) correctAnswers++;
         
         return {

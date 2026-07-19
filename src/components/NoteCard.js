@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { getNote, deleteNote } from "../services/noteService";
+import { BASE_URL } from "../services/api";
 
 function NoteCard({ note, onInteraction, isTeacher }) {
   const [isLoading, setIsLoading] = useState(false);
@@ -8,7 +9,7 @@ function NoteCard({ note, onInteraction, isTeacher }) {
     setIsLoading(true);
     try {
       const res = await getNote(note._id);
-      window.open(`http://localhost:5000${res.data.pdfUrl}`, '_blank');
+      window.open(`${BASE_URL}${res.data.pdfUrl}`, '_blank');
       onInteraction(); // Refresh to update download count
     } catch (error) {
       alert("Failed to load PDF");
@@ -19,7 +20,7 @@ function NoteCard({ note, onInteraction, isTeacher }) {
 
   const handleDownload = () => {
     const link = document.createElement('a');
-    link.href = `http://localhost:5000${note.pdfUrl}`;
+    link.href = `${BASE_URL}${note.pdfUrl}`;
     link.download = `${note.title}.pdf`;
     document.body.appendChild(link);
     link.click();
@@ -44,7 +45,6 @@ function NoteCard({ note, onInteraction, isTeacher }) {
   const getNoteTypeColor = (type) => {
     switch (type) {
       case "Past Note": return "#e3f2fd";
-
       case "Key Book": return "#e8f5e8";
       case "Notes": return "#fff3e0";
       default: return "#f5f5f5";
@@ -54,7 +54,6 @@ function NoteCard({ note, onInteraction, isTeacher }) {
   const getNoteTypeTextColor = (type) => {
     switch (type) {
       case "Past Note": return "#1976d2";
-
       case "Key Book": return "#388e3c";
       case "Notes": return "#f57c00";
       default: return "#666";
@@ -77,9 +76,29 @@ function NoteCard({ note, onInteraction, isTeacher }) {
           marginBottom: '1rem'
         }}>
           <div style={{ flex: 1 }}>
+            <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.5rem', flexWrap: 'wrap' }}>
+              <span style={{ backgroundColor: getNoteTypeColor(note.noteType), color: getNoteTypeTextColor(note.noteType), padding: '0.2rem 0.6rem', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 'bold' }}>
+                {note.noteType || 'Notes'}
+              </span>
+              {(note.subject || note.topic) && (
+                <span style={{ backgroundColor: '#f0f0f0', color: '#666', padding: '0.2rem 0.6rem', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 'bold' }}>
+                  {note.subject} {note.topic ? `- ${note.topic}` : ''}
+                </span>
+              )}
+              {note.year && (
+                <span style={{ backgroundColor: '#f0f0f0', color: '#666', padding: '0.2rem 0.6rem', borderRadius: '4px', fontSize: '0.75rem', fontWeight: 'bold' }}>
+                  {note.year}
+                </span>
+              )}
+            </div>
             <h3 style={{ margin: '0', color: '#333', fontSize: '1.2rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
               📄 {note.title}
             </h3>
+            {note.description && (
+              <p style={{ margin: '0.5rem 0 0 0', color: '#666', fontSize: '0.9rem' }}>
+                {note.description}
+              </p>
+            )}
           </div>
         </div>
 

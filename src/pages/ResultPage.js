@@ -277,7 +277,16 @@ function ResultPage() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
             {questions.map((question, index) => {
               const userAnswer = userAnswers[index];
-              const isCorrect = userAnswer === question.correctAnswer;
+              
+              let isCorrect = false;
+              if (question.correctAnswer !== undefined) {
+                if (typeof question.correctAnswer === 'number' || (typeof question.correctAnswer === 'string' && !isNaN(question.correctAnswer) && question.correctAnswer.length < 3)) {
+                  const correctIndex = parseInt(question.correctAnswer);
+                  isCorrect = userAnswer === question.options[correctIndex];
+                } else {
+                  isCorrect = userAnswer === question.correctAnswer;
+                }
+              }
               
               return (
                 <div
@@ -333,7 +342,14 @@ function ResultPage() {
                   
                   <div style={{ display: 'grid', gap: '0.5rem' }}>
                     {question.options.map((option, optIndex) => {
-                      const isCorrectAnswer = option === question.correctAnswer;
+                      let isCorrectAnswer = false;
+                      if (question.correctAnswer !== undefined) {
+                        if (typeof question.correctAnswer === 'number' || (typeof question.correctAnswer === 'string' && !isNaN(question.correctAnswer) && question.correctAnswer.length < 3)) {
+                          isCorrectAnswer = optIndex === parseInt(question.correctAnswer);
+                        } else {
+                          isCorrectAnswer = option === question.correctAnswer;
+                        }
+                      }
                       const isSelectedOption = option === userAnswer;
                       
                       return (

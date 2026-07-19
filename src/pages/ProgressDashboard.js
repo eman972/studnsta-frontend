@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { getMyQuizResults, getUserPerformanceOverview } from "../services/quizResultService";
 import { getGradeFromScore, formatQuizTime } from "../services/quizApiService";
 import { BarChart, LineChart, StatCard } from "../components/Charts";
+import TeacherQuizResults from "../components/TeacherQuizResults";
+import SkeletonLoader from "../components/SkeletonLoader";
 
 function ProgressDashboard() {
   const [quizResults, setQuizResults] = useState([]);
@@ -91,21 +93,24 @@ function ProgressDashboard() {
     const recentResults = filteredResults.slice(-10);
     const scores = recentResults.map(result => result.score);
     const labels = recentResults.map((result, index) => `Quiz ${index + 1}`);
-    
     return { scores, labels };
   };
 
   if (isLoading) {
     return (
-      <div style={{ 
-        minHeight: '100vh', 
-        display: 'flex', 
-        alignItems: 'center', 
-        justifyContent: 'center',
-        backgroundColor: 'var(--midnight-velvet)'
-      }}>
-        <div style={{ textAlign: 'center', color: 'var(--pure-pearl)' }}>
-          <div style={{ fontSize: '2rem', marginBottom: '1rem' }}>Loading Progress...</div>
+      <div className="page-container" style={{ margin: '-2rem', padding: '3rem', minHeight: '100vh' }}>
+        <div style={{ marginBottom: '3rem', textAlign: 'center' }}>
+          <SkeletonLoader height="3rem" width="350px" style={{ margin: '0 auto 1rem' }} />
+          <SkeletonLoader height="1.5rem" width="220px" style={{ margin: '0 auto' }} />
+        </div>
+        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '2rem', gap: '1rem' }}>
+          <SkeletonLoader height="2.5rem" width="100px" count={3} inline style={{ margin: '0 0.5rem' }} />
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1.5rem', marginBottom: '2rem' }}>
+          <SkeletonLoader height="120px" count={4} />
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: '2rem' }}>
+          <SkeletonLoader height="300px" count={2} />
         </div>
       </div>
     );
@@ -441,6 +446,11 @@ function ProgressDashboard() {
           </div>
         )}
       </div>
+
+      {/* Teacher View - Live Quiz Results */}
+      {localStorage.getItem('userRole') === 'teacher' && (
+        <TeacherQuizResults />
+      )}
     </div>
   );
 }

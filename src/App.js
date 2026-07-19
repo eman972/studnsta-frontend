@@ -15,6 +15,7 @@ import LiveQuizPage from "./pages/LiveQuizPage";
 import LiveQuizResult from "./pages/LiveQuizResult";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import AiTutor from "./pages/AiTutor";
+import Leaderboard from "./pages/Leaderboard";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Navigation from "./components/Navigation";
 import Footer from "./components/Footer";
@@ -117,6 +118,7 @@ function App() {
                       <Route path="/quiz" element={<QuizPage />} />
                       <Route path="/quiz-result" element={<ResultPage />} />
                       <Route path="/quiz-history" element={<QuizHistory />} />
+                      <Route path="/leaderboard" element={<Leaderboard />} />
                       <Route path="/live-quiz-setup" element={<LiveQuizSetup />} />
                       <Route path="/quiz/live/:id" element={<LiveQuizPage />} />
                       <Route path="/live-quiz-result" element={<LiveQuizResult />} />

@@ -28,9 +28,12 @@ function UploadNoteModal({ onClose, onNoteUploaded }) {
     
     try {
       const noteFormData = new FormData();
-      noteFormData.append("title", pdfFile.name.replace(/\.[^/.]+$/, "")); // use filename without extension
-      noteFormData.append("description", "Uploaded Document");
-      noteFormData.append("noteType", "Notes");
+      noteFormData.append("title", formData.title || pdfFile.name.replace(/\.[^/.]+$/, ""));
+      noteFormData.append("description", formData.description);
+      noteFormData.append("subject", formData.subject);
+      noteFormData.append("topic", formData.chapter);
+      noteFormData.append("year", formData.year);
+      noteFormData.append("noteType", formData.noteType);
       noteFormData.append("pdf", pdfFile);
 
       await uploadNote(noteFormData);
@@ -98,6 +101,44 @@ function UploadNoteModal({ onClose, onNoteUploaded }) {
         </div>
 
         <form onSubmit={handleSubmit}>
+
+          <div style={{ marginBottom: '1.5rem' }}>
+            <label style={{ display: 'block', marginBottom: '0.5rem', color: 'var(--text-secondary)', fontSize: '0.9rem' }}>Title</label>
+            <input type="text" name="title" value={formData.title} onChange={handleChange} placeholder="Leave blank to use filename" style={{ width: '100%', padding: '0.5rem', border: '1px solid rgba(255,255,255,0.2)', backgroundColor: 'rgba(0,0,0,0.2)', color: 'var(--white)', borderRadius: '5px', fontSize: '0.9rem' }} />
+          </div>
+
+          <div style={{ marginBottom: '1.5rem' }}>
+            <label style={{ display: 'block', marginBottom: '0.5rem', color: 'var(--text-secondary)', fontSize: '0.9rem' }}>Description</label>
+            <textarea name="description" value={formData.description} onChange={handleChange} placeholder="Optional details..." style={{ width: '100%', padding: '0.5rem', border: '1px solid rgba(255,255,255,0.2)', backgroundColor: 'rgba(0,0,0,0.2)', color: 'var(--white)', borderRadius: '5px', fontSize: '0.9rem', minHeight: '60px' }} />
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1.5rem' }}>
+            <div>
+              <label style={{ display: 'block', marginBottom: '0.5rem', color: 'var(--text-secondary)', fontSize: '0.9rem' }}>Subject</label>
+              <select name="subject" value={formData.subject} onChange={handleChange} style={{ width: '100%', padding: '0.5rem', border: '1px solid rgba(255,255,255,0.2)', backgroundColor: 'rgba(0,0,0,0.8)', color: 'var(--white)', borderRadius: '5px', fontSize: '0.9rem' }}>
+                {subjects.map(s => <option key={s} value={s}>{s}</option>)}
+              </select>
+            </div>
+            <div>
+              <label style={{ display: 'block', marginBottom: '0.5rem', color: 'var(--text-secondary)', fontSize: '0.9rem' }}>Topic/Chapter</label>
+              <input type="text" name="chapter" value={formData.chapter} onChange={handleChange} placeholder="e.g. Algebra" style={{ width: '100%', padding: '0.5rem', border: '1px solid rgba(255,255,255,0.2)', backgroundColor: 'rgba(0,0,0,0.2)', color: 'var(--white)', borderRadius: '5px', fontSize: '0.9rem' }} />
+            </div>
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1.5rem' }}>
+            <div>
+              <label style={{ display: 'block', marginBottom: '0.5rem', color: 'var(--text-secondary)', fontSize: '0.9rem' }}>Type</label>
+              <select name="noteType" value={formData.noteType} onChange={handleChange} style={{ width: '100%', padding: '0.5rem', border: '1px solid rgba(255,255,255,0.2)', backgroundColor: 'rgba(0,0,0,0.8)', color: 'var(--white)', borderRadius: '5px', fontSize: '0.9rem' }}>
+                {noteTypes.map(t => <option key={t} value={t}>{t}</option>)}
+              </select>
+            </div>
+            <div>
+              <label style={{ display: 'block', marginBottom: '0.5rem', color: 'var(--text-secondary)', fontSize: '0.9rem' }}>Year</label>
+              <select name="year" value={formData.year} onChange={handleChange} style={{ width: '100%', padding: '0.5rem', border: '1px solid rgba(255,255,255,0.2)', backgroundColor: 'rgba(0,0,0,0.8)', color: 'var(--white)', borderRadius: '5px', fontSize: '0.9rem' }}>
+                {years.map(y => <option key={y} value={y}>{y}</option>)}
+              </select>
+            </div>
+          </div>
 
           <div style={{ marginBottom: '1.5rem' }}>
             <label style={{ display: 'block', marginBottom: '0.5rem', color: 'var(--text-secondary)', fontSize: '0.9rem' }}>

@@ -1,7 +1,32 @@
 import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import api from "../services/api";
 
 function Home() {
   const navigate = useNavigate();
+  const [user, setUser] = useState(JSON.parse(localStorage.getItem("user") || "{}"));
+  const [leaderboard, setLeaderboard] = useState([]);
+  const [streak, setStreak] = useState(user?.dailyStreak || 0);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const meRes = await api.get('/api/auth/me');
+        if (meRes.data) {
+          setStreak(meRes.data.dailyStreak || 0);
+          setUser({ ...user, ...meRes.data });
+        }
+        
+        const lbRes = await api.get('/api/quiz/leaderboard');
+        if (lbRes.data?.success) {
+          setLeaderboard(lbRes.data.leaderboard.slice(0, 3)); // Only take top 3 for dashboard
+        }
+      } catch (error) {
+        console.error("Error fetching dashboard data", error);
+      }
+    };
+    fetchData();
+  }, []);
 
   return (
     <div className="page-container" style={{
@@ -31,16 +56,15 @@ function Home() {
           borderRadius: '24px',
           boxShadow: '0 0 30px rgba(168, 85, 247, 0.3), inset 0 0 20px rgba(168, 85, 247, 0.1)'
         }}>
-          <div style={{ marginBottom: '1.5rem', display: 'flex' }}>
+          <div style={{ marginBottom: '1.5rem', display: 'flex', justifyContent: 'center' }}>
             <img 
-              src="/grad_cap.png" 
-              alt="Graduation Cap" 
+              src="/logo_neon_transparent.png" 
+              alt="Studnsta Logo" 
               style={{ 
-                width: '80px', 
-                height: '80px', 
-                objectFit: 'contain', 
-                mixBlendMode: 'screen',
-                filter: 'drop-shadow(0 10px 20px rgba(251, 146, 60, 0.3))'
+                width: '200px', 
+                height: '200px', 
+                objectFit: 'contain',
+                filter: 'drop-shadow(0 10px 20px rgba(168, 85, 247, 0.4))'
               }} 
             />
           </div>
@@ -70,6 +94,57 @@ function Home() {
           }}>
             Your premier academic collaboration platform. Bridge the gap between knowledge and accessibility, and master your educational curriculum.
           </p>
+        </div>
+
+        {/* Dashboard Gamification Highlights */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem', marginTop: '1rem' }}>
+          
+          {/* Streak Card */}
+          <div className="glass-card" style={{ padding: '2rem', textAlign: 'center', cursor: 'pointer', transition: 'all 0.3s' }} onClick={() => navigate('/quiz-setup')}>
+            <div style={{ fontSize: '4rem', marginBottom: '1rem', filter: streak > 0 ? 'drop-shadow(0 0 20px rgba(255, 152, 0, 0.5))' : 'grayscale(1)' }}>
+              🔥
+            </div>
+            <h3 style={{ color: 'var(--pure-pearl)', fontSize: '1.8rem', marginBottom: '0.5rem' }}>
+              {streak} Day Streak
+            </h3>
+            <p style={{ color: 'var(--text-muted)' }}>
+              {streak > 0 
+                ? "You're on fire! Keep it up by taking a practice quiz today." 
+                : "Start a learning streak by taking a practice quiz today!"}
+            </p>
+          </div>
+
+          {/* Leaderboard Preview Card */}
+          <div className="glass-card" style={{ padding: '2rem' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem' }}>
+              <h3 style={{ color: 'var(--pure-pearl)', fontSize: '1.4rem', margin: 0, display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <span style={{ color: '#ffd700' }}>🏆</span> Top Students
+              </h3>
+              <button 
+                onClick={() => navigate('/leaderboard')}
+                style={{ background: 'transparent', border: 'none', color: 'var(--brand-400)', cursor: 'pointer', fontWeight: 'bold' }}
+              >
+                View All
+              </button>
+            </div>
+            
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+              {leaderboard.length === 0 ? (
+                <div style={{ textAlign: 'center', color: 'var(--text-muted)', padding: '1rem 0' }}>No rankings yet!</div>
+              ) : (
+                leaderboard.map((student, index) => (
+                  <div key={student._id} style={{ display: 'flex', alignItems: 'center', gap: '1rem', background: 'rgba(255,255,255,0.05)', padding: '0.8rem 1rem', borderRadius: '12px' }}>
+                    <div style={{ fontSize: '1.2rem', width: '25px', textAlign: 'center' }}>
+                      {index === 0 ? "🥇" : index === 1 ? "🥈" : "🥉"}
+                    </div>
+                    <div style={{ flex: 1, fontWeight: 'bold', color: 'var(--pure-pearl)' }}>{student.name}</div>
+                    <div style={{ color: 'var(--brand-400)', fontWeight: '900' }}>{student.averageScore}%</div>
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
+          
         </div>
 
         {/* Why Choose Studnsta */}
