@@ -1,10 +1,11 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { getUserProfile, uploadAvatar } from "../services/profileService";
 import { getSavedPosts } from "../services/postService";
 import EditProfileModal from "../components/EditProfileModal";
 import PostCard from "../components/PostCard";
 import { BASE_URL } from "../services/api";
+import { clearAuthSession } from "../utils/authStorage";
 
 function Profile() {
   const [profileData, setProfileData] = useState(null);
@@ -18,14 +19,7 @@ function Profile() {
   const { userId } = useParams();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    fetchProfileData();
-    if (!userId) {
-      fetchSavedPosts();
-    }
-  }, [userId]);
-
-  const fetchProfileData = async () => {
+  const fetchProfileData = useCallback(async () => {
     setIsLoading(true);
     try {
       const res = await getUserProfile(userId);
@@ -35,9 +29,9 @@ function Profile() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [userId]);
 
-  const fetchSavedPosts = async (silent = false) => {
+  const fetchSavedPosts = useCallback(async (silent = false) => {
     if (!silent) setIsLoadingSaved(true);
     try {
       const res = await getSavedPosts();
@@ -48,9 +42,14 @@ function Profile() {
     } finally {
       if (!silent) setIsLoadingSaved(false);
     }
-  };
+  }, []);
 
-
+  useEffect(() => {
+    fetchProfileData();
+    if (!userId) {
+      fetchSavedPosts();
+    }
+  }, [userId, fetchProfileData, fetchSavedPosts]);
 
   const handleAvatarChange = async (e) => {
     const file = e.target.files[0];
@@ -197,8 +196,7 @@ function Profile() {
                     <div style={{ height: '1px', background: 'rgba(255,255,255,0.1)', margin: '0.2rem 0' }} />
                     <button 
                       onClick={() => {
-                        localStorage.removeItem("token");
-                        localStorage.removeItem("user");
+                        clearAuthSession();
                         navigate("/");
                       }}
                       style={{ 
@@ -323,8 +321,7 @@ function Profile() {
               </button>
               <button 
                 onClick={() => {
-                  localStorage.removeItem("token");
-                  localStorage.removeItem("user");
+                  clearAuthSession();
                   navigate("/");
                 }}
                 style={{

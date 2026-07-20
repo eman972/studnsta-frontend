@@ -4,7 +4,7 @@ import { getGradeFromScore, formatQuizTime } from "../services/quizApiService";
 function LiveQuizResult() {
   const location = useLocation();
   const navigate = useNavigate();
-  const { quizResults, quiz, userAnswers, timeTaken } = location.state || {};
+  const { quizResults, quiz, timeTaken } = location.state || {};
 
   if (!quizResults) {
     return (

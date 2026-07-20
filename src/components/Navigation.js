@@ -1,51 +1,67 @@
 import { useNavigate, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
-import api from "../services/api";
+import api, { BASE_URL } from "../services/api";
+import { clearAuthSession, getRefreshToken } from "../utils/authStorage";
+import { logout as logoutApi } from "../services/authService";
+import NotificationBell from "./NotificationBell";
 
 function Navigation() {
   const navigate = useNavigate();
   const location = useLocation();
   const [user] = useState(JSON.parse(localStorage.getItem("user") || "{}"));
-  const userRole = localStorage.getItem("userRole");
+  const userRole = (localStorage.getItem("userRole") || "").toLowerCase();
   const [isAboutOpen, setIsAboutOpen] = useState(false);
   const [liveStreak, setLiveStreak] = useState(user?.dailyStreak || 0);
-  
+
   const [isLightMode, setIsLightMode] = useState(() => {
-    return document.body.classList.contains('light-mode');
+    return document.body.classList.contains("light-mode");
   });
 
   useEffect(() => {
+    let cancelled = false;
+
     const fetchMe = async () => {
       try {
-        const res = await api.get('/api/auth/me');
-        if (res.data) {
-          setLiveStreak(res.data.dailyStreak || 0);
-          // Also update local storage so it's fresh
-          const updatedUser = { ...user, ...res.data };
-          localStorage.setItem("user", JSON.stringify(updatedUser));
-        }
+        const res = await api.get("/api/auth/me");
+        if (cancelled || !res.data) return;
+        setLiveStreak(res.data.dailyStreak || 0);
+        const currentUser = JSON.parse(localStorage.getItem("user") || "{}");
+        localStorage.setItem("user", JSON.stringify({ ...currentUser, ...res.data }));
       } catch (error) {
-        console.error("Failed to fetch user data", error);
+        if (cancelled) return;
+        if (error.code === "ERR_NETWORK") {
+          console.warn("Backend unreachable. Start it with: cd backend && npm run dev");
+        } else if (error.response?.status !== 401) {
+          console.error("Failed to fetch user data", error);
+        }
       }
     };
+
     fetchMe();
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   const toggleTheme = () => {
-    setIsLightMode(prev => {
+    setIsLightMode((prev) => {
       const next = !prev;
       if (next) {
-        document.body.classList.add('light-mode');
+        document.body.classList.add("light-mode");
       } else {
-        document.body.classList.remove('light-mode');
+        document.body.classList.remove("light-mode");
       }
       return next;
     });
   };
 
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
+  const handleLogout = async () => {
+    try {
+      if (getRefreshToken()) await logoutApi();
+    } catch (_) {
+      /* ignore */
+    }
+    clearAuthSession();
     navigate("/");
   };
 
@@ -53,21 +69,40 @@ function Navigation() {
     { name: "Dashboard", path: "/home", icon: "Dashboard" },
     { name: "Connect", path: "/connect", icon: "Connect" },
     { name: "Study Notes", path: "/notes", icon: "Notes" },
+    { name: "Classes", path: "/classes", icon: "Classes" },
+    { name: "Messages", path: "/messages", icon: "Messages" },
+    { name: "Notifications", path: "/notifications", icon: "Bell" },
+    { name: "Calendar", path: "/calendar", icon: "Calendar" },
+    { name: "Flashcards", path: "/flashcards", icon: "Cards" },
+    { name: "People", path: "/people", icon: "People" },
+    { name: "Search", path: "/search", icon: "Search" },
+    { name: "Assignments", path: "/assignments", icon: "Assignments" },
+    { name: "Mastery", path: "/mastery", icon: "Mastery" },
+    { name: "Study Groups", path: "/study-groups", icon: "Groups" },
+    { name: "Clubs", path: "/clubs", icon: "Clubs" },
     { name: "My Progress", path: "/progress", icon: "Analytics" },
     { name: "Practice Quiz", path: "/quiz-setup", icon: "Quiz" },
     { name: "Leaderboard", path: "/leaderboard", icon: "Trophy" },
     { name: "AI Tutor", path: "/ai-tutor", icon: "AI" },
     { name: "Create Quiz", path: "/live-quiz-setup", icon: "Create" },
+    { name: "Teacher Quizzes", path: "/teacher-quizzes", icon: "Teacher" },
+    { name: "Admin", path: "/admin", icon: "Admin" },
     { name: "Profile", path: "/profile", icon: "Person" },
+    { name: "Settings", path: "/settings", icon: "Settings" },
     { name: "Guide", path: "/privacy", icon: "Help" },
   ];
 
-  const menuItems = baseMenuItems.filter(item => 
-    !(userRole?.toLowerCase() === "student" && item.path === "/live-quiz-setup")
-  );
+  const menuItems = baseMenuItems.filter((item) => {
+    if (userRole === "student" && item.path === "/live-quiz-setup") return false;
+    if (item.path === "/teacher-quizzes" && userRole !== "teacher" && userRole !== "admin") return false;
+    if (item.path === "/admin" && userRole !== "admin") return false;
+    return true;
+  });
 
   const isActive = (path) => {
     if (path === "/profile") return location.pathname.startsWith("/profile");
+    if (path === "/classes") return location.pathname.startsWith("/classes");
+    if (path === "/messages") return location.pathname.startsWith("/messages");
     return location.pathname === path;
   };
 
@@ -76,12 +111,26 @@ function Navigation() {
       Dashboard: "🏠",
       Connect: "💬",
       Notes: "📚",
+      Classes: "🎓",
+      Messages: "✉️",
+      Bell: "🔔",
+      Calendar: "📅",
+      Cards: "🃏",
+      People: "👥",
+      Search: "🔍",
+      Assignments: "📋",
+      Mastery: "🗺️",
+      Groups: "🧑‍🤝‍🧑",
+      Clubs: "🏛️",
       Analytics: "📈",
       Quiz: "📝",
       Trophy: "🏆",
       AI: "🤖",
       Create: "➕",
+      Teacher: "👨‍🏫",
+      Admin: "🛡️",
       Person: "👤",
+      Settings: "⚙️",
       Help: "❓",
       Logout: "🔌",
     };
@@ -91,10 +140,13 @@ function Navigation() {
   return (
     <>
       <aside className="sidebar no-scrollbar">
-        {/* Logo */}
         <div
           onClick={() => setIsAboutOpen(true)}
           title="About Studnsta"
+          role="button"
+          tabIndex={0}
+          aria-label="About Studnsta"
+          onKeyDown={(e) => e.key === "Enter" && setIsAboutOpen(true)}
           style={{
             marginBottom: "var(--space-8)",
             display: "flex",
@@ -106,19 +158,21 @@ function Navigation() {
           onMouseOver={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
           onMouseOut={(e) => (e.currentTarget.style.transform = "scale(1)")}
         >
-          <div style={{
-            width: "65px",
-            height: "65px",
-            marginBottom: "var(--space-3)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}>
+          <div
+            style={{
+              width: "65px",
+              height: "65px",
+              marginBottom: "var(--space-3)",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
             <img
               src="/logo_neon_transparent.png"
               alt="Studnsta Logo"
               style={{
-                width: "100%", 
+                width: "100%",
                 height: "100%",
                 objectFit: "contain",
               }}
@@ -149,8 +203,7 @@ function Navigation() {
           />
         </div>
 
-        {/* Navigation Links */}
-        <nav style={{ flex: 1 }}>
+        <nav style={{ flex: 1 }} aria-label="Main navigation">
           <div style={{ marginBottom: "var(--space-4)" }}>
             <h3
               style={{
@@ -172,6 +225,8 @@ function Navigation() {
                   <button
                     onClick={() => navigate(item.path)}
                     className={`menu-item ${isActive(item.path) ? "active" : ""}`}
+                    aria-label={item.name}
+                    aria-current={isActive(item.path) ? "page" : undefined}
                   >
                     <span className="menu-icon">{getIcon(item.icon)}</span>
                     <span
@@ -202,7 +257,6 @@ function Navigation() {
           </ul>
         </nav>
 
-        {/* User Info & Logout */}
         <div className="user-profile-card">
           <div
             style={{
@@ -218,7 +272,7 @@ function Navigation() {
                 height: "48px",
                 borderRadius: "14px",
                 backgroundColor: user.avatar ? "transparent" : "var(--rich-lavender)",
-                backgroundImage: user.avatar ? `url(http://localhost:5000${user.avatar})` : "none",
+                backgroundImage: user.avatar ? `url(${BASE_URL}${user.avatar})` : "none",
                 backgroundSize: "cover",
                 backgroundPosition: "center",
                 display: "flex",
@@ -258,9 +312,12 @@ function Navigation() {
                 {user.role || "Guest"}
               </div>
             </div>
-            
+
+            <NotificationBell />
+
             <div
               title={`${liveStreak} Day Streak`}
+              aria-label={`${liveStreak} day streak`}
               style={{
                 display: "flex",
                 alignItems: "center",
@@ -282,41 +339,44 @@ function Navigation() {
               }}
               onMouseOut={(e) => {
                 e.currentTarget.style.transform = "scale(1)";
-                e.currentTarget.style.boxShadow = liveStreak > 0 ? "0 0 10px rgba(255, 152, 0, 0.2)" : "none";
+                e.currentTarget.style.boxShadow =
+                  liveStreak > 0 ? "0 0 10px rgba(255, 152, 0, 0.2)" : "none";
               }}
             >
               <span style={{ fontSize: "1.1rem" }}>🔥</span>
               <span>{liveStreak}</span>
             </div>
-            
+
             <button
               onClick={toggleTheme}
+              aria-label={isLightMode ? "Switch to dark mode" : "Switch to light mode"}
               title={isLightMode ? "Switch to Dark Mode" : "Switch to Light Mode"}
               style={{
-                background: 'transparent',
-                border: 'none',
-                color: 'var(--text-primary)',
-                cursor: 'pointer',
-                fontSize: '1.2rem',
-                padding: '0.5rem',
-                borderRadius: '50%',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                transition: 'background 0.3s'
+                background: "transparent",
+                border: "none",
+                color: "var(--text-primary)",
+                cursor: "pointer",
+                fontSize: "1.2rem",
+                padding: "0.5rem",
+                borderRadius: "50%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                transition: "background 0.3s",
               }}
-              onMouseOver={(e) => e.currentTarget.style.background = 'rgba(168, 85, 247, 0.1)'}
-              onMouseOut={(e) => e.currentTarget.style.background = 'transparent'}
+              onMouseOver={(e) => (e.currentTarget.style.background = "rgba(168, 85, 247, 0.1)")}
+              onMouseOut={(e) => (e.currentTarget.style.background = "transparent")}
             >
-              {isLightMode ? '🌙' : '☀️'}
+              {isLightMode ? "🌙" : "☀️"}
             </button>
           </div>
-          
-          <button 
-            onClick={handleLogout} 
-            className="menu-item" 
-            style={{ 
-              marginTop: "1rem", 
+
+          <button
+            onClick={handleLogout}
+            className="menu-item"
+            aria-label="Log out"
+            style={{
+              marginTop: "1rem",
               backgroundColor: "rgba(255, 100, 100, 0.05)",
               borderColor: "rgba(255, 100, 100, 0.2)",
             }}
@@ -329,7 +389,6 @@ function Navigation() {
         </div>
       </aside>
 
-      {/* About Overlay */}
       {isAboutOpen && (
         <div
           onClick={() => setIsAboutOpen(false)}
@@ -351,6 +410,8 @@ function Navigation() {
           <div
             className="no-scrollbar"
             onClick={(e) => e.stopPropagation()}
+            role="dialog"
+            aria-label="About Studnsta"
             style={{
               background: "rgba(255, 255, 255, 0.1)",
               backdropFilter: "blur(25px)",
@@ -369,6 +430,7 @@ function Navigation() {
           >
             <button
               onClick={() => setIsAboutOpen(false)}
+              aria-label="Close about dialog"
               style={{
                 position: "absolute",
                 top: "2rem",
@@ -398,7 +460,16 @@ function Navigation() {
               ✕
             </button>
             <div style={{ marginBottom: "1.5rem", display: "flex", justifyContent: "center" }}>
-              <img src="/logo_neon_transparent.png" alt="Studnsta" style={{ width: "100px", height: "100px", objectFit: "contain", filter: 'drop-shadow(0 10px 20px rgba(168, 85, 247, 0.4))' }} />
+              <img
+                src="/logo_neon_transparent.png"
+                alt="Studnsta"
+                style={{
+                  width: "100px",
+                  height: "100px",
+                  objectFit: "contain",
+                  filter: "drop-shadow(0 10px 20px rgba(168, 85, 247, 0.4))",
+                }}
+              />
             </div>
             <h2
               style={{
@@ -430,7 +501,6 @@ function Navigation() {
               discussion, we transform the way students discover, share, and master their educational
               curriculum. Experience a world where academic excellence meets modern connectivity.
             </p>
-
           </div>
         </div>
       )}

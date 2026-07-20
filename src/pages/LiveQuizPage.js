@@ -1,7 +1,6 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { getLiveQuizById, submitLiveQuizResults } from "../services/liveQuizService";
-import { getGradeFromScore, formatQuizTime } from "../services/quizApiService";
 
 function LiveQuizPage() {
   const location = useLocation();
@@ -19,6 +18,32 @@ function LiveQuizPage() {
   const [quizStarted, setQuizStarted] = useState(false);
   const timerRef = useRef(null);
   const submitRef = useRef();
+
+  const fetchQuizData = useCallback(async () => {
+    try {
+      const res = await getLiveQuizById(quizId);
+      
+      if (res.success) {
+        const validation = validateQuizAccess(res.quiz);
+        if (!validation.valid) {
+          alert(validation.message);
+          navigate('/home');
+          return;
+        }
+
+        setQuiz(res.quiz);
+        setTimeLeft(res.quiz.duration * 60); // Convert minutes to seconds
+        setUserAnswers(new Array(res.quiz.questions.length).fill(null));
+      }
+    } catch (error) {
+      console.error("Error fetching quiz:", error);
+      const msg = error.response?.data?.message || error.message;
+      alert(`Failed to load quiz: ${msg}`);
+      navigate('/home');
+    } finally {
+      setIsLoading(false);
+    }
+  }, [quizId, navigate]);
 
   // Keep the latest submit function in a ref for the event listener
   useEffect(() => {
@@ -47,15 +72,15 @@ function LiveQuizPage() {
 
   useEffect(() => {
     fetchQuizData();
-  }, []);
+  }, [fetchQuizData]);
 
   useEffect(() => {
     if (quizStarted && timeLeft > 0) {
       timerRef.current = setTimeout(() => {
-        setTimeLeft(timeLeft - 1);
+        setTimeLeft((t) => t - 1);
       }, 1000);
     } else if (timeLeft === 0 && quizStarted) {
-      handleSubmitQuiz();
+      if (submitRef.current) submitRef.current();
     }
 
     return () => {
@@ -64,32 +89,6 @@ function LiveQuizPage() {
       }
     };
   }, [timeLeft, quizStarted]);
-
-  const fetchQuizData = async () => {
-    try {
-      const res = await getLiveQuizById(quizId);
-      
-      if (res.success) {
-        const validation = validateQuizAccess(res.quiz);
-        if (!validation.valid) {
-          alert(validation.message);
-          navigate('/home');
-          return;
-        }
-
-        setQuiz(res.quiz);
-        setTimeLeft(res.quiz.duration * 60); // Convert minutes to seconds
-        setUserAnswers(new Array(res.quiz.questions.length).fill(null));
-      }
-    } catch (error) {
-      console.error("Error fetching quiz:", error);
-      const msg = error.response?.data?.message || error.message;
-      alert(`Failed to load quiz: ${msg}`);
-      navigate('/home');
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   const validateQuizAccess = (quiz) => {
     if (!quiz.isLive) {

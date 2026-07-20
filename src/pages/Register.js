@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { registerUser } from "../services/authService";
+import { getAuthToken, saveAuthSession } from "../utils/authStorage";
 
 function Register() {
   const [formData, setFormData] = useState({
@@ -8,14 +9,17 @@ function Register() {
     email: "",
     password: "",
     role: "student",
+    institution: "",
+    inviteCode: "",
   });
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (localStorage.getItem("token")) {
-      navigate("/home");
+    if (getAuthToken()) {
+      const user = JSON.parse(localStorage.getItem("user") || "{}");
+      navigate(user.onboardingComplete === false ? "/onboarding" : "/home");
     }
   }, [navigate]);
 
@@ -29,16 +33,30 @@ function Register() {
     setError("");
 
     try {
-      const res = await registerUser(formData);
-      localStorage.setItem("token", res.data.token);
-      localStorage.setItem("userId", res.data.user.id);
-      localStorage.setItem("userName", res.data.user.name);
-      localStorage.setItem("userRole", res.data.user.role);
-      navigate("/home");
+      const payload = {
+        name: formData.name,
+        email: formData.email,
+        password: formData.password,
+        role: formData.role,
+      };
+      if (formData.institution.trim()) payload.institution = formData.institution.trim();
+      if (formData.role === "teacher" && formData.inviteCode.trim()) {
+        payload.inviteCode = formData.inviteCode.trim();
+      }
+
+      const res = await registerUser(payload);
+      saveAuthSession({
+        token: res.data.token,
+        refreshToken: res.data.refreshToken,
+        user: res.data.user,
+      });
+      navigate("/onboarding");
     } catch (err) {
       const msg =
-        err.response?.data?.message ||
-        "Registration failed. Please check your details.";
+        err.code === "ERR_NETWORK"
+          ? "Cannot reach the server. Make sure the backend is running on port 5000."
+          : err.response?.data?.message ||
+            "Registration failed. Please check your details.";
       setError(msg);
     } finally {
       setIsLoading(false);
@@ -91,6 +109,7 @@ function Register() {
               value={formData.role}
               onChange={handleChange}
               className="input-field"
+              aria-label="Role"
             >
               <option value="student">Student</option>
               <option value="teacher">Teacher</option>
@@ -107,6 +126,7 @@ function Register() {
               onChange={handleChange}
               required
               className="input-field"
+              aria-label="Full name"
             />
           </div>
 
@@ -120,10 +140,11 @@ function Register() {
               onChange={handleChange}
               required
               className="input-field"
+              aria-label="Email"
             />
           </div>
 
-          <div style={{ marginBottom: "1.5rem" }}>
+          <div style={{ marginBottom: "1.25rem" }}>
             <label style={labelStyle}>Password</label>
             <input
               type="password"
@@ -133,11 +154,41 @@ function Register() {
               onChange={handleChange}
               required
               className="input-field"
+              aria-label="Password"
             />
           </div>
 
+          <div style={{ marginBottom: "1.25rem" }}>
+            <label style={labelStyle}>Institution (optional)</label>
+            <input
+              type="text"
+              name="institution"
+              placeholder="Your university"
+              value={formData.institution}
+              onChange={handleChange}
+              className="input-field"
+              aria-label="Institution"
+            />
+          </div>
+
+          {formData.role === "teacher" && (
+            <div style={{ marginBottom: "1.5rem" }}>
+              <label style={labelStyle}>Teacher invite code</label>
+              <input
+                type="text"
+                name="inviteCode"
+                placeholder="Invite code"
+                value={formData.inviteCode}
+                onChange={handleChange}
+                className="input-field"
+                aria-label="Teacher invite code"
+              />
+            </div>
+          )}
+
           {error && (
             <div
+              role="alert"
               style={{
                 color: "#ef4444",
                 backgroundColor: "rgba(239, 68, 68, 0.1)",

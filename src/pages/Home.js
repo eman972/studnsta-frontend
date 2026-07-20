@@ -9,23 +9,34 @@ function Home() {
   const [streak, setStreak] = useState(user?.dailyStreak || 0);
 
   useEffect(() => {
+    let cancelled = false;
+
     const fetchData = async () => {
       try {
-        const meRes = await api.get('/api/auth/me');
-        if (meRes.data) {
+        const meRes = await api.get("/api/auth/me");
+        if (!cancelled && meRes.data) {
           setStreak(meRes.data.dailyStreak || 0);
-          setUser({ ...user, ...meRes.data });
+          setUser((prev) => ({ ...prev, ...meRes.data }));
         }
-        
-        const lbRes = await api.get('/api/quiz/leaderboard');
-        if (lbRes.data?.success) {
-          setLeaderboard(lbRes.data.leaderboard.slice(0, 3)); // Only take top 3 for dashboard
+
+        const lbRes = await api.get("/api/quiz/leaderboard");
+        if (!cancelled && lbRes.data?.success) {
+          setLeaderboard(lbRes.data.leaderboard.slice(0, 3));
         }
       } catch (error) {
-        console.error("Error fetching dashboard data", error);
+        if (cancelled) return;
+        if (error.code === "ERR_NETWORK") {
+          console.warn("Backend unreachable. Start it with: cd backend && npm run dev");
+        } else if (error.response?.status !== 401) {
+          console.error("Error fetching dashboard data", error);
+        }
       }
     };
+
     fetchData();
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   return (

@@ -35,6 +35,8 @@ function AiTutor() {
   const [isLoading, setIsLoading] = useState(false);
   const [modelUsed, setModelUsed] = useState(null);
   const [error, setError] = useState(null);
+  const [chatId, setChatId] = useState(null);
+  const [subjectMode, setSubjectMode] = useState("");
   const chatContainerRef = useRef(null);
   const textareaRef = useRef(null);
 
@@ -64,12 +66,16 @@ function AiTutor() {
         .slice(1) // skip initial assistant greeting
         .map(({ role, content }) => ({ role, content }));
 
-      const res = await sendMessage(apiMessages);
+      const res = await sendMessage(apiMessages, {
+        chatId,
+        subject: subjectMode || undefined,
+      });
       const reply =
         res.data?.reply || "Sorry, I could not generate a response.";
       const model = res.data?.model;
 
       if (model) setModelUsed(model);
+      if (res.data?.chatId) setChatId(res.data.chatId);
 
       setMessages([...newMessages, { role: "assistant", content: reply }]);
     } catch (err) {
@@ -113,6 +119,7 @@ function AiTutor() {
     ]);
     setError(null);
     setModelUsed(null);
+    setChatId(null);
   };
 
   return (
@@ -175,6 +182,23 @@ function AiTutor() {
               </span>
             )}
           </p>
+          <select
+            value={subjectMode}
+            onChange={(e) => setSubjectMode(e.target.value)}
+            aria-label="Tutor subject mode"
+            style={{
+              marginTop: "0.5rem",
+              padding: "0.4rem 0.6rem",
+              borderRadius: 8,
+              border: "1px solid rgba(255,255,255,0.15)",
+              background: "rgba(0,0,0,0.3)",
+              color: "var(--pure-pearl)",
+            }}
+          >
+            <option value="">General tutor</option>
+            <option value="math">Math mode</option>
+            <option value="writing">Writing mode</option>
+          </select>
         </div>
         <button
           onClick={clearChat}

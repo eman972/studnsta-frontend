@@ -7,8 +7,7 @@ function QuizSetup() {
   const [topics, setTopics] = useState([]);
   const [selectedSubject, setSelectedSubject] = useState("");
   const [selectedTopic, setSelectedTopic] = useState("");
-   const [questionCount, setQuestionCount] = useState(5);
-  const [isLoading, setIsLoading] = useState(false);
+  const [questionCount, setQuestionCount] = useState(5);
   const [isLoadingTopics, setIsLoadingTopics] = useState(false);
   const navigate = useNavigate();
 

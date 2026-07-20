@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { getGradeFromScore, formatQuizTime } from "../services/quizApiService";
+import { explainWrong } from "../services/aiService";
 
 function ResultPage() {
   const location = useLocation();
@@ -9,6 +10,8 @@ function ResultPage() {
 
   const [showDetailedResults, setShowDetailedResults] = useState(false);
   const [animatedScore, setAnimatedScore] = useState(0);
+  const [reviewMode, setReviewMode] = useState(false);
+  const [explanations, setExplanations] = useState({});
 
   useEffect(() => {
     if (!quizResult) {
@@ -16,9 +19,8 @@ function ResultPage() {
       return;
     }
 
-    // Animate score
     const targetScore = quizResult.score;
-    const duration = 2000; // 2 seconds
+    const duration = 2000;
     const steps = 60;
     const increment = targetScore / steps;
     let current = 0;
@@ -45,6 +47,27 @@ function ResultPage() {
   const incorrectAnswers = quizResult.totalQuestions - correctAnswers;
   const accuracy = Math.round((correctAnswers / quizResult.totalQuestions) * 100);
 
+  const wrongItems = (questions || [])
+    .map((q, i) => ({ q, i, answer: userAnswers?.[i] }))
+    .filter(({ q, answer }) => answer && answer !== q.correctAnswer);
+
+  const handleExplain = async (item) => {
+    try {
+      const res = await explainWrong({
+        question: item.q.question,
+        correctAnswer: item.q.correctAnswer,
+        userAnswer: item.answer,
+        explanation: item.q.explanation,
+      });
+      setExplanations((prev) => ({ ...prev, [item.i]: res.data.reply }));
+    } catch (e) {
+      setExplanations((prev) => ({
+        ...prev,
+        [item.i]: e.response?.data?.message || "Could not load explanation",
+      }));
+    }
+  };
+
   const handleRetakeQuiz = () => {
     navigate("/quiz-setup", { 
       state: { 
@@ -60,14 +83,6 @@ function ResultPage() {
 
   const handleGoHome = () => {
     navigate("/home");
-  };
-
-  const getAnswerIcon = (isCorrect) => {
-    return isCorrect ? '×' : '×';
-  };
-
-  const getAnswerColor = (isCorrect) => {
-    return isCorrect ? '#10b981' : '#ef4444';
   };
 
   return (
@@ -218,6 +233,21 @@ function ResultPage() {
         >
           Retake Quiz
         </button>
+
+        <button
+          onClick={() => setReviewMode(!reviewMode)}
+          style={{
+            padding: '1rem 2rem',
+            fontSize: '1rem',
+            borderRadius: '12px',
+            border: '1px solid rgba(163, 100, 255, 0.4)',
+            background: 'rgba(163, 100, 255, 0.15)',
+            color: 'var(--pure-pearl)',
+            cursor: 'pointer',
+          }}
+        >
+          {reviewMode ? "Hide wrong-answer review" : "Review wrong answers"}
+        </button>
         
         <button
           onClick={() => setShowDetailedResults(!showDetailedResults)}
@@ -251,6 +281,42 @@ function ResultPage() {
           View History
         </button>
       </div>
+
+      {reviewMode && (
+        <div className="glass-card" style={{ padding: "1.5rem", maxWidth: 800, width: "100%", marginBottom: "2rem" }}>
+          <h3 style={{ color: "var(--pure-pearl)", marginTop: 0 }}>Wrong answer review</h3>
+          {wrongItems.length === 0 ? (
+            <p style={{ color: "var(--text-muted)" }}>No wrong answers — nice work!</p>
+          ) : (
+            wrongItems.map((item) => (
+              <div key={item.i} style={{ marginBottom: "1.25rem", borderBottom: "1px solid rgba(255,255,255,0.08)", paddingBottom: "1rem" }}>
+                <div style={{ color: "var(--pure-pearl)", fontWeight: 600 }}>{item.q.question}</div>
+                <div style={{ color: "#f87171", marginTop: 6 }}>Your answer: {item.answer}</div>
+                <div style={{ color: "#34d399", marginTop: 4 }}>Correct: {item.q.correctAnswer}</div>
+                <button
+                  onClick={() => handleExplain(item)}
+                  style={{
+                    marginTop: 8,
+                    padding: "0.5rem 1rem",
+                    borderRadius: 10,
+                    border: "1px solid rgba(163,100,255,0.4)",
+                    background: "rgba(163,100,255,0.12)",
+                    color: "var(--pure-pearl)",
+                    cursor: "pointer",
+                  }}
+                >
+                  Explain with AI
+                </button>
+                {explanations[item.i] && (
+                  <p style={{ color: "var(--text-muted)", marginTop: 8, whiteSpace: "pre-wrap" }}>
+                    {explanations[item.i]}
+                  </p>
+                )}
+              </div>
+            ))
+          )}
+        </div>
+      )}
 
       {/* Detailed Results */}
       {showDetailedResults && questions && (

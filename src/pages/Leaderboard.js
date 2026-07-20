@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
-import api from "../services/api";
+import api, { BASE_URL } from "../services/api";
 import SkeletonLoader from "../components/SkeletonLoader";
 
 function Leaderboard() {
   const [leaderboard, setLeaderboard] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [currentUserId, setCurrentUserId] = useState(localStorage.getItem("userId"));
+  const currentUserId = localStorage.getItem("userId");
 
   useEffect(() => {
     const fetchLeaderboard = async () => {
@@ -126,7 +126,7 @@ function Leaderboard() {
                         height: "55px",
                         borderRadius: "14px",
                         backgroundColor: student.avatar ? "transparent" : "var(--rich-lavender)",
-                        backgroundImage: student.avatar ? `url(http://localhost:5000${student.avatar})` : "none",
+                        backgroundImage: student.avatar ? `url(${BASE_URL}${student.avatar})` : "none",
                         backgroundSize: "cover",
                         backgroundPosition: "center",
                         display: "flex",

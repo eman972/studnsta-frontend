@@ -120,7 +120,6 @@ function ProgressDashboard() {
   const subjectStats = getSubjectStats();
   const progressTrend = getProgressTrend();
   const overview = performanceOverview?.overview || {};
-  const subjectBreakdown = performanceOverview?.subjectStats || [];
 
   return (
     <div className="page-container" style={{ 

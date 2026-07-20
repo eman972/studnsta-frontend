@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { getQuizHistory, getSubjects, getTopicsBySubject } from "../services/quizApiService";
 import { getGradeFromScore, formatQuizTime } from "../services/quizApiService";
@@ -18,13 +18,40 @@ function QuizHistory() {
   const [subjects, setSubjects] = useState([]);
   const [topics, setTopics] = useState([]);
 
+  const handleFilterChange = useCallback((key, value) => {
+    setFilters(prev => ({ ...prev, [key]: value }));
+    setCurrentPage(1);
+  }, []);
+
+  const fetchQuizHistory = useCallback(async () => {
+    setIsLoading(true);
+    try {
+      const userId = localStorage.getItem('userId');
+      const res = await getQuizHistory(userId, {
+        page: currentPage,
+        limit: 10,
+        ...filters
+      });
+
+      if (res.success) {
+        setQuizHistory(res.quizHistory);
+        setStatistics(res.statistics);
+        setTotalPages(res.pagination.totalPages);
+      }
+    } catch (error) {
+      console.error("Error fetching quiz history:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [currentPage, filters]);
+
   useEffect(() => {
     fetchAvailableSubjects();
   }, []);
 
   useEffect(() => {
     fetchQuizHistory();
-  }, [currentPage, filters.subject, filters.topic]);
+  }, [fetchQuizHistory]);
 
   useEffect(() => {
     if (filters.subject) {
@@ -35,7 +62,7 @@ function QuizHistory() {
         handleFilterChange('topic', '');
       }
     }
-  }, [filters.subject]);
+  }, [filters.subject, filters.topic, handleFilterChange]);
 
   const fetchAvailableSubjects = async () => {
     try {
@@ -57,33 +84,6 @@ function QuizHistory() {
     } catch (error) {
       console.error("Error fetching topics:", error);
     }
-  };
-
-  const fetchQuizHistory = async () => {
-    setIsLoading(true);
-    try {
-      const userId = localStorage.getItem('userId');
-      const res = await getQuizHistory(userId, {
-        page: currentPage,
-        limit: 10,
-        ...filters
-      });
-
-      if (res.success) {
-        setQuizHistory(res.quizHistory);
-        setStatistics(res.statistics);
-        setTotalPages(res.pagination.totalPages);
-      }
-    } catch (error) {
-      console.error("Error fetching quiz history:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleFilterChange = (key, value) => {
-    setFilters(prev => ({ ...prev, [key]: value }));
-    setCurrentPage(1); // Reset to first page when filters change
   };
 
   const handlePageChange = (page) => {

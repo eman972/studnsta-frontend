@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { getSubjects, getTopicsBySubject, getQuestions } from "../services/quizApiService";
 import { createLiveQuiz, generateQuizLink } from "../services/liveQuizService";
@@ -29,6 +29,25 @@ function LiveQuizSetup() {
     }
   });
 
+  const fetchQuestions = useCallback(async () => {
+    setIsLoading(true);
+    try {
+      const res = await getQuestions({
+        subject: formData.subject,
+        topic: formData.topic,
+        limit: 50
+      });
+      
+      if (res.success) {
+        setAvailableQuestions(res.questions);
+      }
+    } catch (error) {
+      console.error("Error fetching questions:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [formData.subject, formData.topic]);
+
   useEffect(() => {
     fetchSubjects();
   }, []);
@@ -49,7 +68,7 @@ function LiveQuizSetup() {
     if (formData.subject && formData.topic) {
       fetchQuestions();
     }
-  }, [formData.subject, formData.topic]);
+  }, [formData.subject, formData.topic, fetchQuestions]);
 
   const fetchSubjects = async () => {
     try {
@@ -70,25 +89,6 @@ function LiveQuizSetup() {
       }
     } catch (error) {
       console.error("Error fetching topics:", error);
-    }
-  };
-
-  const fetchQuestions = async () => {
-    setIsLoading(true);
-    try {
-      const res = await getQuestions({
-        subject: formData.subject,
-        topic: formData.topic,
-        limit: 50
-      });
-      
-      if (res.success) {
-        setAvailableQuestions(res.questions);
-      }
-    } catch (error) {
-      console.error("Error fetching questions:", error);
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -159,10 +159,6 @@ function LiveQuizSetup() {
   const copyToClipboard = () => {
     navigator.clipboard.writeText(quizLink);
     alert("Quiz link copied to clipboard!");
-  };
-
-  const handleViewResults = (quizId) => {
-    navigate(`/live-quiz-results/${quizId}`);
   };
 
   if (showLink) {

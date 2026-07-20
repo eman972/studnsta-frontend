@@ -5,5 +5,6 @@ export const likePost = (postId) => api.post(`/api/posts/${postId}/like`);
 export const commentOnPost = (postId, text) => api.post(`/api/posts/${postId}/comment`, { text });
 export const deletePost = (postId) => api.delete(`/api/posts/${postId}`);
 export const followUser = (userId) => api.post(`/api/profile/follow/${userId}`);
+export const unfollowUser = (userId) => api.delete(`/api/profile/follow/${userId}`);
 export const getSavedPosts = () => api.get("/api/posts/saved");
 export const savePost = (postId) => api.post(`/api/posts/${postId}/save`);

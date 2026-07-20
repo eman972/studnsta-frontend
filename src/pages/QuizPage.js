@@ -68,7 +68,7 @@ function QuizPage() {
     if (isSecurityEnabled) {
       // Disable common shortcuts
       if (
-        e.ctrlKey && (e.key === 'c' || e.key === 'v' || e.key === 'x' || e.key === 'a') ||
+        (e.ctrlKey && (e.key === 'c' || e.key === 'v' || e.key === 'x' || e.key === 'a')) ||
         e.key === 'F12' ||
         (e.ctrlKey && e.shiftKey && e.key === 'I') || // DevTools
         (e.ctrlKey && e.shiftKey && e.key === 'J') || // DevTools
@@ -197,6 +197,8 @@ function QuizPage() {
     
     fetchQuestions();
     setStartTime(new Date());
+    // Intentionally run when quiz params change
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [subject, topic, questionCount, navigate]);
 
   // Enable security features when quiz loads
@@ -204,13 +206,14 @@ function QuizPage() {
     if (!isLoading && questions.length > 0) {
       enableSecurityFeatures();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoading, questions]);
 
   // Timer effect
   useEffect(() => {
     if (timeLeft > 0 && !isLoading) {
       timerRef.current = setTimeout(() => {
-        setTimeLeft(timeLeft - 1);
+        setTimeLeft((t) => t - 1);
       }, 1000);
     } else if (timeLeft === 0) {
       handleSubmitQuiz();
@@ -221,6 +224,7 @@ function QuizPage() {
         clearTimeout(timerRef.current);
       }
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [timeLeft, isLoading]);
 
   // Cleanup security features on unmount
