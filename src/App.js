@@ -31,7 +31,7 @@ import StudyGroups from "./pages/StudyGroups";
 import Flashcards from "./pages/Flashcards";
 import Assignments from "./pages/Assignments";
 import Mastery from "./pages/Mastery";
-import Admin from "./pages/Admin";
+
 import Settings from "./pages/Settings";
 import SearchPage from "./pages/SearchPage";
 import Clubs from "./pages/Clubs";
@@ -158,7 +158,7 @@ function App() {
                       <Route path="/flashcards" element={<Flashcards />} />
                       <Route path="/assignments" element={<Assignments />} />
                       <Route path="/mastery" element={<Mastery />} />
-                      <Route path="/admin" element={<Admin />} />
+
                       <Route path="/settings" element={<Settings />} />
                       <Route path="/search" element={<SearchPage />} />
                       <Route path="/clubs" element={<Clubs />} />

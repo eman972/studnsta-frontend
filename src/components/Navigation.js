@@ -86,7 +86,7 @@ function Navigation() {
     { name: "AI Tutor", path: "/ai-tutor", icon: "AI" },
     { name: "Create Quiz", path: "/live-quiz-setup", icon: "Create" },
     { name: "Teacher Quizzes", path: "/teacher-quizzes", icon: "Teacher" },
-    { name: "Admin", path: "/admin", icon: "Admin" },
+
     { name: "Profile", path: "/profile", icon: "Person" },
     { name: "Settings", path: "/settings", icon: "Settings" },
     { name: "Guide", path: "/privacy", icon: "Help" },
@@ -94,8 +94,7 @@ function Navigation() {
 
   const menuItems = baseMenuItems.filter((item) => {
     if (userRole === "student" && item.path === "/live-quiz-setup") return false;
-    if (item.path === "/teacher-quizzes" && userRole !== "teacher" && userRole !== "admin") return false;
-    if (item.path === "/admin" && userRole !== "admin") return false;
+    if (item.path === "/teacher-quizzes" && userRole !== "teacher") return false;
     return true;
   });
 
@@ -128,7 +127,7 @@ function Navigation() {
       AI: "🤖",
       Create: "➕",
       Teacher: "👨‍🏫",
-      Admin: "🛡️",
+
       Person: "👤",
       Settings: "⚙️",
       Help: "❓",

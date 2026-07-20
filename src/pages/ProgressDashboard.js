@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { getMyQuizResults, getUserPerformanceOverview } from "../services/quizResultService";
 import { getGradeFromScore, formatQuizTime } from "../services/quizApiService";
 import { BarChart, LineChart, StatCard } from "../components/Charts";
-import TeacherQuizResults from "../components/TeacherQuizResults";
 import SkeletonLoader from "../components/SkeletonLoader";
 
 function ProgressDashboard() {
@@ -446,10 +445,7 @@ function ProgressDashboard() {
         )}
       </div>
 
-      {/* Teacher View - Live Quiz Results */}
-      {localStorage.getItem('userRole') === 'teacher' && (
-        <TeacherQuizResults />
-      )}
+
     </div>
   );
 }

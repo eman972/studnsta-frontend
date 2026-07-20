@@ -95,15 +95,26 @@ function PeopleDirectory() {
                 </div>
               </div>
               {!isMe && (
-                <button
-                  type="button"
-                  className="glow-button"
-                  onClick={() => toggleFollow(id)}
-                  aria-label={following[id] ? `Unfollow ${u.name}` : `Follow ${u.name}`}
-                  style={{ padding: "0.5rem 1rem", fontSize: "0.85rem" }}
-                >
-                  {following[id] ? "Following" : "Follow"}
-                </button>
+                <div style={{ display: "flex", gap: "0.5rem" }}>
+                  <button
+                    type="button"
+                    className="glow-button"
+                    onClick={() => navigate(`/messages/${id}`)}
+                    aria-label={`Message ${u.name}`}
+                    style={{ padding: "0.5rem 1rem", fontSize: "0.85rem", background: "rgba(168, 85, 247, 0.2)", border: "1px solid var(--rich-lavender)" }}
+                  >
+                    Message
+                  </button>
+                  <button
+                    type="button"
+                    className="glow-button"
+                    onClick={() => toggleFollow(id)}
+                    aria-label={following[id] ? `Unfollow ${u.name}` : `Follow ${u.name}`}
+                    style={{ padding: "0.5rem 1rem", fontSize: "0.85rem" }}
+                  >
+                    {following[id] ? "Following" : "Follow"}
+                  </button>
+                </div>
               )}
             </div>
           );

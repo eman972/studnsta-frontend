@@ -9,7 +9,7 @@ function Messages() {
   const [activeUserId, setActiveUserId] = useState(routeUserId || null);
   const [messages, setMessages] = useState([]);
   const [body, setBody] = useState("");
-  const [composeId, setComposeId] = useState("");
+
   const [error, setError] = useState("");
   const myId = localStorage.getItem("userId");
 
@@ -53,17 +53,12 @@ function Messages() {
 
   const handleSend = async (e) => {
     e.preventDefault();
-    const recipientId = activeUserId || composeId.trim();
+    const recipientId = activeUserId;
     if (!recipientId || !body.trim()) return;
     try {
       await sendDM(recipientId, body.trim());
       setBody("");
-      if (!activeUserId) {
-        openThread(recipientId);
-        setComposeId("");
-      } else {
-        loadThread(recipientId);
-      }
+      loadThread(recipientId);
       loadInbox();
     } catch (err) {
       setError(err.response?.data?.message || "Send failed");
@@ -85,6 +80,8 @@ function Messages() {
       })
     : [];
 
+
+
   return (
     <div className="page-container">
       <h1 style={{ color: "var(--pure-pearl)", fontWeight: 900, fontSize: "2rem", marginBottom: "1.25rem" }}>Messages</h1>
@@ -92,23 +89,6 @@ function Messages() {
 
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: "1rem", minHeight: 420 }}>
         <div className="glass-card" style={{ padding: "1rem", overflowY: "auto" }}>
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              if (composeId.trim()) openThread(composeId.trim());
-            }}
-            style={{ marginBottom: "1rem", display: "flex", gap: "0.5rem" }}
-          >
-            <input
-              className="input-field"
-              placeholder="User ID to message"
-              value={composeId}
-              onChange={(e) => setComposeId(e.target.value)}
-              aria-label="Recipient user ID"
-              style={{ flex: 1, margin: 0, fontSize: "0.85rem" }}
-            />
-            <button type="submit" className="glow-button" aria-label="Open conversation" style={{ padding: "0.5rem 0.75rem" }}>Go</button>
-          </form>
           {inboxItems.length === 0 ? (
             <p style={{ color: "var(--text-muted)", fontSize: "0.9rem" }}>No conversations yet</p>
           ) : (
