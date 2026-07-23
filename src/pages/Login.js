@@ -12,8 +12,7 @@ function Login() {
 
   useEffect(() => {
     if (getAuthToken()) {
-      const user = JSON.parse(localStorage.getItem("user") || "{}");
-      navigate(user.onboardingComplete === false ? "/onboarding" : "/home");
+      navigate("/home");
     }
   }, [navigate]);
 
@@ -29,11 +28,7 @@ function Login() {
         refreshToken: res.data.refreshToken,
         user: res.data.user,
       });
-      if (res.data.user?.onboardingComplete === false) {
-        navigate("/onboarding");
-      } else {
-        navigate("/home");
-      }
+      navigate("/home");
     } catch (err) {
       const msg =
         err.code === "ERR_NETWORK"
@@ -102,23 +97,7 @@ function Login() {
             />
           </div>
 
-          <div style={{ textAlign: "right", marginBottom: "1.5rem" }}>
-            <button
-              type="button"
-              onClick={() => navigate("/forgot-password")}
-              aria-label="Forgot password"
-              style={{
-                background: "none",
-                border: "none",
-                color: "var(--rich-lilac)",
-                cursor: "pointer",
-                fontSize: "0.85rem",
-                fontWeight: "600",
-              }}
-            >
-              Forgot password?
-            </button>
-          </div>
+
 
           {error && (
             <div

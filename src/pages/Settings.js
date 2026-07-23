@@ -13,9 +13,7 @@ function Settings() {
   const stored = JSON.parse(localStorage.getItem("user") || "{}");
   const [privacy, setPrivacy] = useState(stored.privacy || "public");
   const [prefs, setPrefs] = useState({
-    digests: stored.notificationPrefs?.digests ?? true,
     push: stored.notificationPrefs?.push ?? true,
-    email: stored.notificationPrefs?.email ?? true,
   });
   const [sessions, setSessions] = useState([]);
   const [message, setMessage] = useState("");
@@ -115,9 +113,7 @@ function Settings() {
       <div className="glass-card" style={{ padding: "1.5rem", marginBottom: "1rem" }}>
         <h2 style={{ color: "var(--pure-pearl)", fontSize: "1.1rem", marginBottom: "1rem" }}>Notifications</h2>
         {[
-          { key: "email", label: "Email notifications" },
           { key: "push", label: "In-app alerts" },
-          { key: "digests", label: "Email digests" },
         ].map(({ key, label }) => (
           <label key={key} style={{ display: "flex", alignItems: "center", gap: "0.75rem", marginBottom: "0.75rem", color: "var(--text-secondary)", cursor: "pointer" }}>
             <input

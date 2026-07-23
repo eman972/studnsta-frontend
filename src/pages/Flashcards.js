@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { dueFlashcards, reviewFlashcard, createFlashcard } from "../services/platformService";
+import { dueFlashcards, reviewFlashcard, createFlashcard, listFlashcards } from "../services/platformService";
 
 const QUALITY = [
   { q: 0, label: "Again" },
@@ -10,6 +10,7 @@ const QUALITY = [
 
 function Flashcards() {
   const [cards, setCards] = useState([]);
+  const [allCards, setAllCards] = useState([]);
   const [index, setIndex] = useState(0);
   const [flipped, setFlipped] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -20,8 +21,9 @@ function Flashcards() {
   const load = async () => {
     setIsLoading(true);
     try {
-      const res = await dueFlashcards();
-      setCards(res.data.cards || []);
+      const [dueRes, allRes] = await Promise.all([dueFlashcards(), listFlashcards()]);
+      setCards(dueRes.data.cards || []);
+      setAllCards(allRes.data.cards || []);
       setIndex(0);
       setFlipped(false);
     } catch (err) {
@@ -41,7 +43,14 @@ function Flashcards() {
     if (!current) return;
     try {
       await reviewFlashcard(current._id, quality);
-      const next = cards.filter((_, i) => i !== index);
+      let next;
+      if (quality < 3) {
+        // Move to the back of the deck to review again this session
+        next = [...cards.filter((_, i) => i !== index), current];
+      } else {
+        // Remove from current session
+        next = cards.filter((_, i) => i !== index);
+      }
       setCards(next);
       setIndex(0);
       setFlipped(false);
@@ -139,6 +148,35 @@ function Flashcards() {
           )}
         </div>
       )}
+
+      {/* Library Section */}
+      <div style={{ marginTop: "4rem", paddingTop: "2rem", borderTop: "1px solid var(--glass-border)" }}>
+        <h2 style={{ color: "var(--pure-pearl)", fontWeight: 800, fontSize: "1.5rem", marginBottom: "1.5rem" }}>
+          All Saved Cards ({allCards.length})
+        </h2>
+        {allCards.length === 0 ? (
+          <p style={{ color: "var(--text-muted)" }}>You haven't created any cards yet.</p>
+        ) : (
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: "1rem" }}>
+            {allCards.map((c) => (
+              <div key={c._id} className="glass-card" style={{ padding: "1.25rem", display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+                <div style={{ fontSize: "0.8rem", color: "var(--rich-lilac)", fontWeight: 700, textTransform: "uppercase" }}>
+                  {c.subject || "General"}
+                </div>
+                <div style={{ color: "var(--pure-pearl)", fontWeight: 600, fontSize: "1.1rem" }}>
+                  Q: {c.front}
+                </div>
+                <div style={{ color: "var(--text-muted)", fontSize: "0.95rem" }}>
+                  A: {c.back}
+                </div>
+                <div style={{ fontSize: "0.75rem", color: "rgba(255,255,255,0.4)", marginTop: "0.5rem" }}>
+                  Next review: {new Date(c.nextReviewAt).toLocaleDateString()}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

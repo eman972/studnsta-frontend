@@ -1,9 +1,6 @@
 import { Routes, Route, Navigate } from "react-router-dom";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import ForgotPassword from "./pages/ForgotPassword";
-import ResetPassword from "./pages/ResetPassword";
-import VerifyEmail from "./pages/VerifyEmail";
 import Home from "./pages/Home";
 import Connect from "./pages/Connect";
 import Notes from "./pages/Notes";
@@ -19,7 +16,7 @@ import LiveQuizResult from "./pages/LiveQuizResult";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import AiTutor from "./pages/AiTutor";
 import Leaderboard from "./pages/Leaderboard";
-import Onboarding from "./pages/Onboarding";
+
 import TeacherQuizzes from "./pages/TeacherQuizzes";
 import PeopleDirectory from "./pages/PeopleDirectory";
 import Classes from "./pages/Classes";
@@ -67,9 +64,6 @@ function App() {
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/forgot-password" element={<ForgotPassword />} />
-        <Route path="/reset-password" element={<ResetPassword />} />
-        <Route path="/verify-email" element={<VerifyEmail />} />
 
         <Route
           path="/*"
@@ -145,7 +139,7 @@ function App() {
                       <Route path="/live-quiz-result" element={<LiveQuizResult />} />
                       <Route path="/privacy" element={<PrivacyPolicy />} />
                       <Route path="/ai-tutor" element={<AiTutor />} />
-                      <Route path="/onboarding" element={<Onboarding />} />
+
                       <Route path="/teacher-quizzes" element={<TeacherQuizzes />} />
                       <Route path="/people" element={<PeopleDirectory />} />
                       <Route path="/classes" element={<Classes />} />

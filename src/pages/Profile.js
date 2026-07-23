@@ -250,6 +250,12 @@ function Profile() {
               <div style={{ fontSize: '1.1rem', color: 'var(--pure-pearl)' }}>
                 <strong style={{ fontWeight: '900' }}>{profileData?.stats?.totalPosts || 0}</strong> <span style={{ opacity: 0.7 }}>posts</span>
               </div>
+              <div style={{ fontSize: '1.1rem', color: 'var(--pure-pearl)' }}>
+                <strong style={{ fontWeight: '900' }}>{profileData?.user?.followersCount || 0}</strong> <span style={{ opacity: 0.7 }}>followers</span>
+              </div>
+              <div style={{ fontSize: '1.1rem', color: 'var(--pure-pearl)' }}>
+                <strong style={{ fontWeight: '900' }}>{profileData?.user?.followingCount || 0}</strong> <span style={{ opacity: 0.7 }}>following</span>
+              </div>
             </div>
 
             <div style={{ 

@@ -149,7 +149,12 @@ function ClassDetail() {
                 <ul style={{ listStyle: "none", padding: 0, margin: 0 }}>
                   {klass.files.map((f, i) => (
                     <li key={f._id || i} style={{ padding: "0.75rem 0", borderBottom: "1px solid var(--glass-border)" }}>
-                      <a href={`${BASE_URL}${f.url}`} target="_blank" rel="noreferrer" style={{ color: "var(--rich-lilac)", fontWeight: 600 }}>
+                      <a 
+                        href={`${BASE_URL}${f.url && f.url.startsWith('/uploads/') && !f.url.startsWith('/uploads/files/') && !f.url.startsWith('/uploads/notes/') ? f.url.replace('/uploads/', '/uploads/files/') : f.url}`} 
+                        target="_blank" 
+                        rel="noreferrer" 
+                        style={{ color: "var(--rich-lilac)", fontWeight: 600 }}
+                      >
                         {f.name}
                       </a>
                     </li>

@@ -14,14 +14,27 @@ const Footer = () => {
     forStudents: [
       { name: 'Dashboard', url: '/home' },
       { name: 'Community Connect', url: '/connect' },
+      { name: 'People Directory', url: '/people' },
+      { name: 'My Classes', url: '/classes' },
+      { name: 'Messages', url: '/messages' },
+      { name: 'Notifications', url: '/notifications' },
+      { name: 'Calendar & Events', url: '/calendar' },
+      { name: 'Study Groups', url: '/study-groups' },
+      { name: 'Clubs', url: '/clubs' },
+      { name: 'Flashcards', url: '/flashcards' },
+      { name: 'Assignments', url: '/assignments' },
       { name: 'Study Notes', url: '/notes' },
-      { name: 'Practice Quiz', url: '/quiz-setup' },
-      { name: 'AI Tutor', url: '/ai-tutor' },
-      { name: 'My Progress', url: '/progress' },
+      { name: 'Mastery & Progress', url: '/mastery' },
+      { name: 'AI Tutor', url: '/ai-tutor' }
     ],
     forTeachers: [
-      { name: 'Create Live Quiz', url: '/live-quiz-setup' },
+      { name: 'Manage Classes', url: '/classes' },
+      { name: 'Assign Work', url: '/assignments' },
+      { name: 'Track Student Mastery', url: '/mastery' },
       { name: 'Upload Study Notes', url: '/notes' },
+      { name: 'People Directory', url: '/people' },
+      { name: 'Messages', url: '/messages' },
+      { name: 'Calendar & Deadlines', url: '/calendar' },
       { name: 'Privacy Policy', url: '/privacy' }
     ]
   };

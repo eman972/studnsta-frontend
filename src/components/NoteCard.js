@@ -12,7 +12,8 @@ function NoteCard({ note, onInteraction, isTeacher }) {
       window.open(`${BASE_URL}${res.data.pdfUrl}`, '_blank');
       onInteraction(); // Refresh to update download count
     } catch (error) {
-      alert("Failed to load PDF");
+      console.error("PDF View Error:", error);
+      alert("Failed to load PDF: " + (error.response?.data?.message || error.message));
     } finally {
       setIsLoading(false);
     }

@@ -10,7 +10,6 @@ function Register() {
     password: "",
     role: "student",
     institution: "",
-    inviteCode: "",
   });
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
@@ -18,8 +17,7 @@ function Register() {
 
   useEffect(() => {
     if (getAuthToken()) {
-      const user = JSON.parse(localStorage.getItem("user") || "{}");
-      navigate(user.onboardingComplete === false ? "/onboarding" : "/home");
+      navigate("/home");
     }
   }, [navigate]);
 
@@ -40,9 +38,6 @@ function Register() {
         role: formData.role,
       };
       if (formData.institution.trim()) payload.institution = formData.institution.trim();
-      if (formData.role === "teacher" && formData.inviteCode.trim()) {
-        payload.inviteCode = formData.inviteCode.trim();
-      }
 
       const res = await registerUser(payload);
       saveAuthSession({
@@ -50,7 +45,7 @@ function Register() {
         refreshToken: res.data.refreshToken,
         user: res.data.user,
       });
-      navigate("/onboarding");
+      navigate("/home");
     } catch (err) {
       const msg =
         err.code === "ERR_NETWORK"
@@ -171,20 +166,6 @@ function Register() {
             />
           </div>
 
-          {formData.role === "teacher" && (
-            <div style={{ marginBottom: "1.5rem" }}>
-              <label style={labelStyle}>Teacher invite code</label>
-              <input
-                type="text"
-                name="inviteCode"
-                placeholder="Invite code"
-                value={formData.inviteCode}
-                onChange={handleChange}
-                className="input-field"
-                aria-label="Teacher invite code"
-              />
-            </div>
-          )}
 
           {error && (
             <div
