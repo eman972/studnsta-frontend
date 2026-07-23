@@ -12,7 +12,7 @@ function ClassDetail() {
   const [error, setError] = useState("");
   const [tab, setTab] = useState("announcements");
   const role = (localStorage.getItem("userRole") || "").toLowerCase();
-  const canAnnounce = role === "teacher" || role === "admin";
+  const canAnnounce = role === "teacher";
 
   const load = async () => {
     try {

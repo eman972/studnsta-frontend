@@ -10,7 +10,7 @@ function Assignments() {
   const [showCreate, setShowCreate] = useState(false);
   const [form, setForm] = useState({ title: "", description: "", dueDate: "" });
   const role = (localStorage.getItem("userRole") || "").toLowerCase();
-  const canCreate = role === "teacher" || role === "admin";
+  const canCreate = role === "teacher";
   const myId = localStorage.getItem("userId");
 
   const load = async () => {

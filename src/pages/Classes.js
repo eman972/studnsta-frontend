@@ -11,7 +11,7 @@ function Classes() {
   const [showCreate, setShowCreate] = useState(false);
   const navigate = useNavigate();
   const role = (localStorage.getItem("userRole") || "").toLowerCase();
-  const canCreate = role === "teacher" || role === "admin";
+  const canCreate = role === "teacher";
 
   const load = async () => {
     setIsLoading(true);

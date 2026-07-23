@@ -90,8 +90,4 @@ export const updateProfile = (data) => api.put("/api/profile", data);
 export const exportMyData = () => api.get("/api/profile/export");
 export const deactivateAccount = () => api.post("/api/profile/deactivate");
 
-// Admin
-export const adminAnalytics = () => api.get("/api/admin/analytics");
-export const adminUsers = () => api.get("/api/admin/users");
-export const verifyTeacher = (userId) =>
-  api.post(`/api/admin/verify-teacher/${userId}`);
+// Admin functions removed
