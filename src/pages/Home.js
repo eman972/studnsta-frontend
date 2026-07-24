@@ -8,6 +8,14 @@ function Home() {
   const [leaderboard, setLeaderboard] = useState([]);
   const [streak, setStreak] = useState(user?.dailyStreak || 0);
 
+  const handleNavigation = (path) => {
+    if (user?.role === "guest") {
+      alert("Please register to access all modules and features!");
+    } else {
+      navigate(path);
+    }
+  };
+
   useEffect(() => {
     let cancelled = false;
 
@@ -111,7 +119,7 @@ function Home() {
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '2rem', marginTop: '1rem' }}>
           
           {/* Streak Card */}
-          <div className="glass-card" style={{ padding: '2rem', textAlign: 'center', cursor: 'pointer', transition: 'all 0.3s' }} onClick={() => navigate('/quiz-setup')}>
+          <div className="glass-card" style={{ padding: '2rem', textAlign: 'center', cursor: 'pointer', transition: 'all 0.3s' }} onClick={() => handleNavigation('/quiz-setup')}>
             <div style={{ fontSize: '4rem', marginBottom: '1rem', filter: streak > 0 ? 'drop-shadow(0 0 20px rgba(255, 152, 0, 0.5))' : 'grayscale(1)' }}>
               🔥
             </div>
@@ -132,7 +140,7 @@ function Home() {
                 <span style={{ color: '#ffd700' }}>🏆</span> Top Students
               </h3>
               <button 
-                onClick={() => navigate('/leaderboard')}
+                onClick={() => handleNavigation('/leaderboard')}
                 style={{ background: 'transparent', border: 'none', color: 'var(--brand-400)', cursor: 'pointer', fontWeight: 'bold' }}
               >
                 View All
@@ -235,7 +243,7 @@ function Home() {
         {/* Call to Action */}
         <div style={{ textAlign: 'center', marginTop: '4rem', marginBottom: '2rem' }}>
           <button 
-            onClick={() => navigate('/quiz-setup')}
+            onClick={() => handleNavigation('/quiz-setup')}
             className="glow-button"
             style={{
               padding: '1.5rem 4rem',

@@ -36,7 +36,8 @@ function NoteCard({ note, onInteraction, isTeacher }) {
         await deleteNote(note._id);
         onInteraction();
       } catch (error) {
-        alert("Failed to delete note");
+        console.error("Delete Error:", error);
+        alert("Failed to delete note: " + (error.response?.data?.message || error.message));
       } finally {
         setIsLoading(false);
       }

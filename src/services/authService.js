@@ -3,6 +3,7 @@ import { getRefreshToken } from "../utils/authStorage";
 
 export const registerUser = (data) => api.post("/api/auth/register", data);
 export const loginUser = (data) => api.post("/api/auth/login", data);
+export const loginGuest = () => api.post("/api/auth/guest-login");
 export const refreshToken = (token) =>
   api.post("/api/auth/refresh", { refreshToken: token });
 

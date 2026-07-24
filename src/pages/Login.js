@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { loginUser } from "../services/authService";
+import { loginUser, loginGuest } from "../services/authService";
 import { getAuthToken, saveAuthSession } from "../utils/authStorage";
 
 function Login() {
@@ -38,6 +38,24 @@ function Login() {
               ? "Account deactivated or access denied."
               : "Login failed. Check your email and password.");
       setError(msg);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleGuestLogin = async () => {
+    setIsLoading(true);
+    setError("");
+    try {
+      const res = await loginGuest();
+      saveAuthSession({
+        token: res.data.token,
+        refreshToken: res.data.refreshToken,
+        user: res.data.user,
+      });
+      navigate("/home");
+    } catch (err) {
+      setError("Guest login unavailable right now.");
     } finally {
       setIsLoading(false);
     }
@@ -124,11 +142,28 @@ function Login() {
             className="glow-button"
             style={{
               width: "100%",
-              marginBottom: "1.5rem",
+              marginBottom: "1rem",
               fontSize: "1.1rem",
             }}
           >
             {isLoading ? "Unlocking Spark..." : "Sign In"}
+          </button>
+          
+          <button
+            type="button"
+            disabled={isLoading}
+            onClick={handleGuestLogin}
+            className="btn btn-secondary"
+            style={{
+              width: "100%",
+              marginBottom: "1.5rem",
+              fontSize: "1.1rem",
+              background: "rgba(255, 255, 255, 0.05)",
+              border: "1px solid rgba(255, 255, 255, 0.1)",
+              color: "var(--text-primary)"
+            }}
+          >
+            Join as Guest
           </button>
         </form>
 

@@ -32,6 +32,7 @@ import Mastery from "./pages/Mastery";
 import Settings from "./pages/Settings";
 import SearchPage from "./pages/SearchPage";
 import Clubs from "./pages/Clubs";
+import AdminDashboard from "./pages/AdminDashboard";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Navigation from "./components/Navigation";
 import Footer from "./components/Footer";
@@ -156,6 +157,7 @@ function App() {
                       <Route path="/settings" element={<Settings />} />
                       <Route path="/search" element={<SearchPage />} />
                       <Route path="/clubs" element={<Clubs />} />
+                      <Route path="/admin" element={<AdminDashboard />} />
                       <Route path="*" element={<Navigate to="/home" replace />} />
                     </Routes>
                   </div>

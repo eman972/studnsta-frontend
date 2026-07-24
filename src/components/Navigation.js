@@ -90,11 +90,13 @@ function Navigation() {
     { name: "Profile", path: "/profile", icon: "Person" },
     { name: "Settings", path: "/settings", icon: "Settings" },
     { name: "Guide", path: "/privacy", icon: "Help" },
+    { name: "Admin Panel", path: "/admin", icon: "Admin" },
   ];
 
   const menuItems = baseMenuItems.filter((item) => {
     if (userRole === "student" && item.path === "/live-quiz-setup") return false;
     if (item.path === "/teacher-quizzes" && userRole !== "teacher") return false;
+    if (item.path === "/admin" && userRole !== "admin") return false;
     return true;
   });
 
@@ -131,6 +133,7 @@ function Navigation() {
       Person: "👤",
       Settings: "⚙️",
       Help: "❓",
+      Admin: "🛡️",
       Logout: "🔌",
     };
     return iconEmojis[iconName] || "📍";
@@ -222,7 +225,13 @@ function Navigation() {
               return (
                 <li key={item.path} style={{ marginBottom: "var(--space-2)" }}>
                   <button
-                    onClick={() => navigate(item.path)}
+                    onClick={() => {
+                      if (userRole === "guest" && item.path !== "/home") {
+                        alert("Please register to access all modules and features!");
+                      } else {
+                        navigate(item.path);
+                      }
+                    }}
                     className={`menu-item ${isActive(item.path) ? "active" : ""}`}
                     aria-label={item.name}
                     aria-current={isActive(item.path) ? "page" : undefined}
