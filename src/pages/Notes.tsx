@@ -1,38 +1,59 @@
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import { getNotes } from "../services/noteService";
 import NoteCard from "../components/NoteCard";
 import UploadNoteModal from "../components/UploadNoteModal";
 import SkeletonLoader from "../components/SkeletonLoader";
+import { useQuery } from "@tanstack/react-query";
+
+interface Note {
+  _id: string;
+  title: string;
+  description?: string;
+  subject?: string;
+  topic?: string;
+  year?: string;
+  noteType?: string;
+  pdfUrl: string;
+  uploadedBy: {
+    _id: string;
+    name: string;
+    role: string;
+  };
+  downloads: number;
+}
 
 function Notes() {
-  const [notes, setNotes] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
-  const [isLoading, setIsLoading] = useState(true);
-  const [userRole, setUserRole] = useState("");
+  const [userRole, setUserRole] = useState("guest");
   const [showUploadModal, setShowUploadModal] = useState(false);
 
   useEffect(() => {
     const role = localStorage.getItem("userRole");
     setUserRole(role || "guest");
-    fetchNotes();
   }, []);
 
-  const fetchNotes = async () => {
-    setIsLoading(true);
-    try {
+  const { data: notes = [], isLoading, refetch } = useQuery<Note[]>({
+    queryKey: ["notes"],
+    queryFn: async () => {
       const res = await getNotes({});
-      setNotes(res.data);
-    } catch (error) {
-      console.log("Failed to fetch notes");
-      setNotes([]);
-    } finally {
-      setIsLoading(false);
+      return res.data;
     }
-  };
+  });
 
   const handleInteraction = () => {
-    fetchNotes();
+    refetch();
   };
+
+  const filteredNotes = notes.filter((note) => {
+    if (!searchQuery) return true;
+    const query = searchQuery.toLowerCase();
+    return (
+      note.title?.toLowerCase().includes(query) ||
+      note.description?.toLowerCase().includes(query) ||
+      note.subject?.toLowerCase().includes(query) ||
+      note.topic?.toLowerCase().includes(query)
+    );
+  });
 
   return (
     <div className="page-container" style={{ 
@@ -59,11 +80,11 @@ function Notes() {
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
               fontSize: '2.2rem', 
-              fontWeight: '900'
+              fontWeight: 900
             }}>
               📚 Course Notes & PDFs
             </h1>
-            <p style={{ margin: '0.4rem 0 0 0', color: 'var(--text-secondary)', opacity: 0.9, fontSize: '1rem', fontWeight: '500' }}>
+            <p style={{ margin: '0.4rem 0 0 0', color: 'var(--text-secondary)', opacity: 0.9, fontSize: '1rem', fontWeight: 500 }}>
               Download PDF books, course notes, and study materials
             </p>
           </div>
@@ -142,35 +163,17 @@ function Notes() {
       )}
 
       {/* Notes List */}
-      {!isLoading && notes.filter(note => {
-        if (!searchQuery) return true;
-        const query = searchQuery.toLowerCase();
-        return (
-          note.title?.toLowerCase().includes(query) ||
-          note.description?.toLowerCase().includes(query) ||
-          note.subject?.toLowerCase().includes(query) ||
-          note.topic?.toLowerCase().includes(query)
-        );
-      }).map((note) => (
+      {!isLoading && filteredNotes.map((note) => (
         <NoteCard 
           key={note._id} 
-          note={note} 
+          note={note as any} 
           onInteraction={handleInteraction}
           isTeacher={userRole === "teacher"}
         />
       ))}
 
       {/* Empty State */}
-      {!isLoading && notes.length > 0 && notes.filter(note => {
-        if (!searchQuery) return true;
-        const query = searchQuery.toLowerCase();
-        return (
-          note.title?.toLowerCase().includes(query) ||
-          note.description?.toLowerCase().includes(query) ||
-          note.subject?.toLowerCase().includes(query) ||
-          note.topic?.toLowerCase().includes(query)
-        );
-      }).length === 0 && (
+      {!isLoading && notes.length > 0 && filteredNotes.length === 0 && (
         <div className="glass-card" style={{
           padding: '5rem 3rem',
           textAlign: 'center'
@@ -201,7 +204,7 @@ function Notes() {
       {showUploadModal && (
         <UploadNoteModal
           onClose={() => setShowUploadModal(false)}
-          onNoteUploaded={fetchNotes}
+          onNoteUploaded={() => refetch()}
         />
       )}
     </div>
